@@ -1,0 +1,7 @@
+{
+	"name": "Loadstone",
+	"description": "Relieves stuttering during level loading",
+	"version_number": "0.0.0",
+	"dependencies": ["BepInEx-BepInExPack-5.4.2100"],
+	"website_url": "https://github.com/AdalynBlack/Loadstone"
+}
