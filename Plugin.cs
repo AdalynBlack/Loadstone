@@ -11,7 +11,7 @@ namespace Loadstone;
 
 //   BepInEx
 // Loadstone
-[BepInPlugin("com.adibtw.loadstone", "Loadstone", "0.0.0")]
+[BepInPlugin("com.adibtw.loadstone", "Loadstone", "0.0.1")]
 [BepInDependency("com.github.lethalmods.lethalexpansioncore", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
 public class Loadstone : BaseUnityPlugin
