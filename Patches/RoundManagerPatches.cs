@@ -158,7 +158,6 @@ public class RoundManagerPatches
 		navMeshSurface.AddData();
 	}
 
-	[HarmonyDebug]
 	[HarmonyPatch(typeof(RoundManager), "SpawnOutsideHazards")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
