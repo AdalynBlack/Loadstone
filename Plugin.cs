@@ -34,10 +34,8 @@ public class Loadstone : BaseUnityPlugin
 		Logger.LogDebug("Patching Methods...");
 		TryPatch(typeof(StartOfRoundPatches));
 		TryPatch(typeof(RoundManagerPatches));
-		TryPatch(typeof(SpawnSyncedObjectPatches));
 		TryPatch(typeof(DungeonPatches));
 		TryPatch(typeof(DungeonGeneratorPatches));
-		TryPatch(typeof(GenericPatches));
 
 		CheckModded();
 
