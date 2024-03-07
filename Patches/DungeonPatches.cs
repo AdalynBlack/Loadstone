@@ -1,5 +1,6 @@
 using DunGen;
 using HarmonyLib;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,7 +44,7 @@ public class DungeonPatches {
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyReversePatch]
 	static void FromProxyIteration(Dungeon __instance, Dictionary<TileProxy, Tile> dictionary, DungeonGenerator generator, TileProxy tile) {
-		IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+		IEnumerable<CodeInstruction> StartTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
 			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's first inner for loop");
 			var matcher = new CodeMatcher(instructions, generator);
@@ -84,13 +85,13 @@ public class DungeonPatches {
 		}
 
 		// make compiler happy
-		_ = Transpiler(null, null);
+		_ = StartTranspiler(null, null);
 	}
 
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyReversePatch]
 	static void FromProxyEnd(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator, Dictionary<TileProxy, Tile> dictionary) {
-		IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		IEnumerable<CodeInstruction> EndTranspiler(IEnumerable<CodeInstruction> instructions)
 		{
 			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's final code");
 			var matcher = new CodeMatcher(instructions);
@@ -104,7 +105,9 @@ public class DungeonPatches {
 	
 			matcher.InsertAndAdvance(
 					new CodeInstruction(OpCodes.Ldarg_3),
-					new CodeInstruction(OpCodes.Stloc_0));
+					new CodeInstruction(OpCodes.Stloc_0),
+					new CodeInstruction(OpCodes.Ldtoken, typeof(UnityEngine.GameObject)),
+					new CodeInstruction(OpCodes.Pop));
 
 			var end = matcher
 				.End()
@@ -117,6 +120,6 @@ public class DungeonPatches {
 		}
 
 		// make compiler happy
-		_ = Transpiler(null);
+		_ = EndTranspiler(null);
 	}
 }

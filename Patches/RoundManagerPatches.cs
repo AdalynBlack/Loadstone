@@ -10,6 +10,9 @@ using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
+using MonoMod.Utils;
+using Mono.Cecil;
+
 namespace Loadstone.Patches;
 
 public class RoundManagerPatches

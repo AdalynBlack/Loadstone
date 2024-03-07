@@ -44,6 +44,12 @@
 		<Reference Include="LethalConfig">
 			<HintPath>.\Deps\Soft\LethalConfig.dll</HintPath>
 		</Reference>
+		<Reference Include="MonoMod.Utils">
+			<HintPath>.\Deps\Soft\MonoMod.Utils.dll</HintPath>
+		</Reference>
+		<Reference Include="Mono.Cecil">
+			<HintPath>.\Deps\Soft\Mono.Cecil.dll</HintPath>
+		</Reference>
 		<Reference Include="LethalExpansionCore">
 			<HintPath>.\Deps\Soft\LethalExpansionCore.dll</HintPath>
 		</Reference>
