@@ -7,13 +7,11 @@ using System.Reflection.Emit;
 namespace Loadstone.Patches;
 
 public class DungeonGeneratorPatches {
-#if TRANSPILER_DEBUG
-	[HarmonyDebug]
-#endif
 	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> PostProcessPatch(IEnumerable<CodeInstruction> instructions)
 	{
+		Loadstone.TranspilerLog.LogDebug($"Attempting to inject async check into DungeonGenerator::PostProcess");
 		Type[] findWaitParams = { typeof(Func<bool>) };
 		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
 
@@ -35,6 +33,7 @@ public class DungeonGeneratorPatches {
 					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
 			.InstructionEnumeration();
 		
+		Loadstone.TranspilerLog.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
 		return newInstructions;
 	}
 

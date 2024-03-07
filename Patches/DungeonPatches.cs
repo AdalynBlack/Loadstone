@@ -45,6 +45,7 @@ public class DungeonPatches {
 	static void FromProxyIteration(Dungeon __instance, Dictionary<TileProxy, Tile> dictionary, DungeonGenerator generator, TileProxy tile) {
 		IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
+			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's first inner for loop");
 			var matcher = new CodeMatcher(instructions, generator);
 
 			var start = matcher
@@ -75,11 +76,10 @@ public class DungeonPatches {
 				.MatchBack(false,
 					new CodeMatch(OpCodes.Leave))
 				.SetOperandAndAdvance(endLabel);
-			
-			Loadstone.TranspilerLog.LogDebug(matcher.Pos);
 
 			var codeList = matcher.InstructionsInRange(start, end);
 
+			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's first inner for loop");
 			return codeList.AsEnumerable();
 		}
 
@@ -92,6 +92,7 @@ public class DungeonPatches {
 	static void FromProxyEnd(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator, Dictionary<TileProxy, Tile> dictionary) {
 		IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
 		{
+			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's final code");
 			var matcher = new CodeMatcher(instructions);
 
 			var start = matcher
@@ -111,6 +112,7 @@ public class DungeonPatches {
 
 			var codeList = matcher.InstructionsInRange(start, end);
 
+			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's final code");
 			return codeList.AsEnumerable();
 		}
 

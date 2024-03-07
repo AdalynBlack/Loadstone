@@ -84,7 +84,7 @@ public class RoundManagerPatches
 
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Successfully injected custom time value of \"{levelLoadWaitTime}\" into \"RoundManager::LoadNewLevelWait\"");
+		Loadstone.TranspilerLog.LogDebug($"Validating injected custom time value of \"{levelLoadWaitTime}\" into \"RoundManager::LoadNewLevelWait\"");
 		return newInstructions;
 	}
 
@@ -119,7 +119,7 @@ public class RoundManagerPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_2)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug("Successfully injected custom start position in coroutine \"RoundManager::LoadNewLevelWait\"");
+		Loadstone.TranspilerLog.LogDebug("Validating injected custom start position in coroutine \"RoundManager::LoadNewLevelWait\"");
 		return newInstructions;
 	}
 
@@ -136,7 +136,7 @@ public class RoundManagerPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Successfully disabled screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
+		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
 		return newInstructions;
 	}
 
