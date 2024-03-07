@@ -5,6 +5,7 @@ using HarmonyLib;
 using Loadstone.Config;
 using Loadstone.Patches;
 using Loadstone.Patches.ExpansionCore;
+using System;
 using System.Collections;
 
 namespace Loadstone;
@@ -31,16 +32,25 @@ public class Loadstone : BaseUnityPlugin
 		TranspilerLog = BepInEx.Logging.Logger.CreateLogSource(" Loadstone(Transpiler)");
 
 		Logger.LogDebug("Patching Methods...");
-		Harmony.CreateAndPatchAll(typeof(StartOfRoundPatches));
-		Harmony.CreateAndPatchAll(typeof(RoundManagerPatches));
-		Harmony.CreateAndPatchAll(typeof(SpawnSyncedObjectPatches));
-		Harmony.CreateAndPatchAll(typeof(DungeonPatches));
-		Harmony.CreateAndPatchAll(typeof(DungeonGeneratorPatches));
-		Harmony.CreateAndPatchAll(typeof(GenericPatches));
+		TryPatch(typeof(StartOfRoundPatches));
+		TryPatch(typeof(RoundManagerPatches));
+		TryPatch(typeof(SpawnSyncedObjectPatches));
+		TryPatch(typeof(DungeonPatches));
+		TryPatch(typeof(DungeonGeneratorPatches));
+		TryPatch(typeof(GenericPatches));
 
 		CheckModded();
 
 		Logger.LogInfo("Plugin Loadstone is loaded!");
+	}
+
+	private void TryPatch(Type type)
+	{
+		try {
+			Harmony.CreateAndPatchAll(type);
+		} catch (Exception exception) {
+			Logger.LogFatal($"Loadstone failed to patch {type}. The following exception was received:\n{exception.ToString()}");
+		}
 	}
 
 	private void CheckModded()
@@ -67,7 +77,7 @@ public class Loadstone : BaseUnityPlugin
 	private void PatchExpansionCore() {
 		Logger.LogDebug("Patching ExpansionCore");
 
-		Harmony.CreateAndPatchAll(typeof(DungeonGenerator_PatchPatches));
+		TryPatch(typeof(DungeonGenerator_PatchPatches));
 	}
 }
 
