@@ -47,7 +47,7 @@ public static class LoadstoneConfig
 		DungeonAsyncMaxTime = LoadstoneFile.Bind<float>(
 				"Tweaks.Dungeon",
 				"Async Gen Wait Time",
-				50f,
+				30f,
 				new ConfigDescription(
 					"How long to spend generating the dungeon each frame, in milliseconds. There is no vanilla value",
 					acceptableValues: new AcceptableValueRange<float>(1, 1000)));
@@ -84,7 +84,7 @@ public static class LoadstoneConfig
 		PostLoadStartDelay.Value = OldPostLoadStartDelay.Value;
 		PostGenerateSpawnDelay.Value = OldPostGenerateSpawnDelay.Value;
 		ShouldGenAsync.Value = OldShouldGenAsync.Value;
-		DungeonAsyncMaxTime.Value = OldDungeonAsyncMaxTime.Value == 100f ? 50f : OldDungeonAsyncMaxTime.Value;
+		DungeonAsyncMaxTime.Value = OldDungeonAsyncMaxTime.Value == 100f ? 30f : OldDungeonAsyncMaxTime.Value;
 
 		LoadstoneFile.Remove(OldPostLoadStartDelay.Definition);
 		LoadstoneFile.Remove(OldPostGenerateSpawnDelay.Definition);
