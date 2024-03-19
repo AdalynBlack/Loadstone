@@ -58,7 +58,7 @@
 		<Exec Command="zip $(Product)Thunderstore.zip README.md manifest.json bin/Release/$(TargetFramework)/$(AssemblyName).dll"/>
 	</Target>
 
-	<Target Name="AddManifestToPackage" AfterTargets="PackageThunderstore" Condition="Exists('CHANGELOG.md')">
+	<Target Name="AddManifestToPackage" AfterTargets="PackageThunderstore" Condition="'$(Configuration)' == 'Release' And Exists('CHANGELOG.md')">
 		<Message Text="Adding Manifest to Package" Importance="High"/>
 		<Exec Command="zip $(Product)Thunderstore.zip CHANGELOG.md"/>
 	</Target>
