@@ -24,12 +24,12 @@ public class Loadstone : BaseUnityPlugin
 	{
 		Logger.LogDebug("Loading Loadstone...");
 
-		Logger.LogDebug("Loading Configs...");
-		LoadstoneConfig.BindAllTo(Config);
-
 		// I prepended spaces because I hate having it right next to the colon in logs lol
 		HarmonyLog = BepInEx.Logging.Logger.CreateLogSource(" Loadstone(Harmony)");
 		TranspilerLog = BepInEx.Logging.Logger.CreateLogSource(" Loadstone(Transpiler)");
+
+		Logger.LogDebug("Loading Configs...");
+		LoadstoneConfig.BindAllTo(Config);
 
 		Logger.LogDebug("Patching Methods...");
 		TryPatch(typeof(StartOfRoundPatches));
