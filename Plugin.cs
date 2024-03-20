@@ -8,6 +8,10 @@ using Loadstone.Patches.ExpansionCore;
 using System;
 using System.Collections;
 
+#if DEBUG
+using Loadstone.Patches.Debug;
+#endif
+
 namespace Loadstone;
 
 //   BepInEx
@@ -38,6 +42,11 @@ public class Loadstone : BaseUnityPlugin
 		TryPatch(typeof(DungeonGeneratorPatches));
 
 		CheckModded();
+
+#if DEBUG
+		Logger.LogDebug("Patching in profiler...");
+		TryPatch(typeof(ProfilingPatches));
+#endif
 
 		Logger.LogInfo("Plugin Loadstone is loaded!");
 	}
