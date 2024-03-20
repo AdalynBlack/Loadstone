@@ -60,7 +60,7 @@
 		<Message Text="Zipping Files for Thunderstore" Importance="High"/>
 		<Delete Files="$(Product)Thunderstore.zip"/>
 		<WriteLinesToFile File="manifest.json" Lines="{&quot;name&quot;: &quot;$(Product)&quot;,&quot;description&quot;: &quot;$(Description)&quot;,&quot;version_number&quot;: &quot;$(Version)&quot;,&quot;dependencies&quot;: $(ThunderDeps),&quot;website_url&quot;: &quot;$(ThunderURL)&quot;}" Overwrite="true"/>
-		<Exec Command="zip -j $(Product)Thunderstore.zip README.md manifest.json bin/Release/$(TargetFramework)/$(AssemblyName).dll"/>
+		<Exec Command="zip -j $(Product)Thunderstore.zip README.md icon.png bin/Release/$(TargetFramework)/$(AssemblyName).dll manifest.json"/>
 		<Delete Files="manifest.json"/>
 	</Target>
 
