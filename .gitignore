@@ -2,3 +2,4 @@ bin/
 obj/
 .editorconfig
 *Thunderstore.zip
+manifest.json
