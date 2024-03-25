@@ -14,6 +14,10 @@ public static class LoadstoneConfig
 	public static ConfigEntry<bool> ShouldGenAsync;
 	public static ConfigEntry<float> DungeonAsyncMaxTime;
 
+	public static ConfigEntry<bool> ShouldLoadingMusicPlay;
+	public static ConfigEntry<float> LoadingMusicFadeTime;
+	public static ConfigEntry<float> LoadingMusicVolume;
+
 	public static void BindAllTo(ConfigFile config)
 	{
 		LoadstoneFile = config;
@@ -51,6 +55,31 @@ public static class LoadstoneConfig
 				new ConfigDescription(
 					"How long to spend generating the dungeon each frame, in milliseconds. There is no vanilla value",
 					acceptableValues: new AcceptableValueRange<float>(1, 1000)));
+
+		//	LCSoundTool
+		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(
+				"Tweaks.LCSoundTool",
+				"Should Loading Music Play",
+				false,
+				new ConfigDescription(
+					"Should we play loading music as the level loads in? Requires LCSoundTool to be installed"));
+
+		LoadingMusicFadeTime = LoadstoneFile.Bind<float>(
+				"Tweaks.LCSoundTool",
+				"Loading Music Fade Time",
+				15f,
+				new ConfigDescription(
+					"How long should it take for the loading music to fade out",
+					acceptableValues: new AcceptableValueRange<float>(0, 30)));
+
+		LoadingMusicVolume = LoadstoneFile.Bind<float>(
+				"Tweaks.LCSoundTool",
+				"Loading Music Volume",
+				0.75f,
+				new ConfigDescription(
+					"The volume of the loading music",
+					acceptableValues: new AcceptableValueRange<float>(0, 1)));
+
 
 		TryRemoveOldEntries();
 	}

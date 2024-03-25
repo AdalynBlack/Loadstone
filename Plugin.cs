@@ -5,6 +5,7 @@ using HarmonyLib;
 using Loadstone.Config;
 using Loadstone.Patches;
 using Loadstone.Patches.ExpansionCore;
+using Loadstone.Patches.LCSoundTool;
 using System;
 using System.Collections;
 
@@ -19,6 +20,7 @@ namespace Loadstone;
 [BepInPlugin("com.adibtw.loadstone", "Loadstone", "0.0.2")]
 [BepInDependency("com.github.lethalmods.lethalexpansioncore", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("LCSoundTool", BepInDependency.DependencyFlags.SoftDependency)]
 public class Loadstone : BaseUnityPlugin
 {
 	internal static ManualLogSource HarmonyLog;
@@ -74,6 +76,9 @@ public class Loadstone : BaseUnityPlugin
 				case "com.github.lethalmods.lethalexpansioncore":
 					PatchExpansionCore();
 					break;
+				case "LCSoundTool":
+					PatchLCSoundTool();
+					break;
 				case "ainavt.lc.lethalconfig":
 					LoadstoneDynamicConfig.RegisterDynamicConfig();
 					break;
@@ -85,6 +90,12 @@ public class Loadstone : BaseUnityPlugin
 		Logger.LogDebug("Patching ExpansionCore");
 
 		TryPatch(typeof(DungeonGenerator_PatchPatches));
+	}
+
+	private void PatchLCSoundTool() {
+		Logger.LogDebug("Patching with LCSoundTool");
+
+		TryPatch(typeof(RoundManagerMusicPatches));
 	}
 }
 

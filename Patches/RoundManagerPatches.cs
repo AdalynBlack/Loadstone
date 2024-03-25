@@ -15,6 +15,7 @@ using Mono.Cecil;
 
 namespace Loadstone.Patches;
 
+[HarmonyPatch(typeof(RoundManager))]
 public class RoundManagerPatches
 {
 	static IEnumerable<CodeInstruction> PatchUnorderedSearch(IEnumerable<CodeInstruction> instructions, Type type)
@@ -33,21 +34,21 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "SpawnSyncedProps")]
+	[HarmonyPatch("SpawnSyncedProps")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnSyncedPropsFindPatch(IEnumerable<CodeInstruction> instructions)
 	{
 		return PatchUnorderedSearch(instructions, typeof(SpawnSyncedObject));
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "GenerateNewFloor")]
+	[HarmonyPatch("GenerateNewFloor")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> GenerateNewFloorFindPatch(IEnumerable<CodeInstruction> instructions)
 	{
 		return PatchUnorderedSearch(instructions, typeof(EntranceTeleport));
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "LoadNewLevelWait", MethodType.Enumerator)]
+	[HarmonyPatch("LoadNewLevelWait", MethodType.Enumerator)]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> LoadNewLevelWaitPatch(IEnumerable<CodeInstruction> instructions)
 	{
@@ -91,7 +92,7 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "Generator_OnGenerationStatusChanged")]
+	[HarmonyPatch("Generator_OnGenerationStatusChanged")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> StatusChangedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
 	{
@@ -110,7 +111,7 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 	
-	[HarmonyPatch(typeof(RoundManager), "LoadNewLevelWait")]
+	[HarmonyPatch("LoadNewLevelWait")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> LoadNewLevelWaitInitPatch(IEnumerable<CodeInstruction> instructions)
 	{
@@ -126,7 +127,7 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "GenerateNewLevelClientRpc")]
+	[HarmonyPatch("GenerateNewLevelClientRpc")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> GenerateNewLevelPatch(IEnumerable<CodeInstruction> instructions)
 	{
@@ -143,7 +144,7 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "GenerateNewFloor")]
+	[HarmonyPatch("GenerateNewFloor")]
 	[HarmonyPrefix]
 	static void GenerateNewFloorPatch(RoundManager __instance)
 	{
@@ -161,7 +162,7 @@ public class RoundManagerPatches
 		navMeshSurface.AddData();
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "SpawnOutsideHazards")]
+	[HarmonyPatch("SpawnOutsideHazards")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
 	{

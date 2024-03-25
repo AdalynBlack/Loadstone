@@ -17,7 +17,6 @@ internal static class LoadstoneDynamicConfig
 							RequiresRestart = false,
 							Min = 0f,
 							Max = 5f}),
-
 				new FloatSliderConfigItem(LoadstoneConfig.PostGenerateSpawnDelay, 
 						new FloatSliderOptions {
 							RequiresRestart = false,
@@ -26,13 +25,21 @@ internal static class LoadstoneDynamicConfig
 
 				new BoolCheckBoxConfigItem(LoadstoneConfig.ShouldGenAsync,
 						new BoolCheckBoxOptions {RequiresRestart = false}),
-
 				new FloatSliderConfigItem(LoadstoneConfig.DungeonAsyncMaxTime, 
 						new FloatSliderOptions {
 							RequiresRestart = false,
 							Min = 0f,
-							Max = 1000f})
+							Max = 1000f}),
+				
+				new BoolCheckBoxConfigItem(LoadstoneConfig.ShouldLoadingMusicPlay,
+						new BoolCheckBoxOptions {RequiresRestart = false}),
+				new FloatSliderConfigItem(LoadstoneConfig.LoadingMusicFadeTime, 
+						new FloatSliderOptions {
+							RequiresRestart = false,
+							Min = 0f,
+							Max = 30f})
 				});
+
 	}
 
 	internal static void AddConfigItems(IEnumerable<BaseConfigItem> configItems)
