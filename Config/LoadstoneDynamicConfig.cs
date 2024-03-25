@@ -37,7 +37,12 @@ internal static class LoadstoneDynamicConfig
 						new FloatSliderOptions {
 							RequiresRestart = false,
 							Min = 0f,
-							Max = 30f})
+							Max = 30f}),
+				new FloatSliderConfigItem(LoadstoneConfig.LoadingMusicVolume, 
+						new FloatSliderOptions {
+							RequiresRestart = false,
+							Min = 0f,
+							Max = 1.5f})
 				});
 
 	}
