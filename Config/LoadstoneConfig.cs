@@ -78,7 +78,7 @@ public static class LoadstoneConfig
 				0.75f,
 				new ConfigDescription(
 					"The volume of the loading music",
-					acceptableValues: new AcceptableValueRange<float>(0, 1)));
+					acceptableValues: new AcceptableValueRange<float>(0, 1.5)));
 
 
 		TryRemoveOldEntries();
