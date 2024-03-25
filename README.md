@@ -31,3 +31,10 @@ All config options can be modified in-game without restarting through LethalConf
       - This value controls a tiemr that decides how long to wait between all clients successfully loading the moon, and starting the process of generating the map layout. I'm not fully sure what the intended purpose of this is, but the vanilla value is 0.5, while the mod sets it to 0 by default.
     - Post-generate Spawn Delay
       - This value controls a timer that decides how long to wait between all clients having generated the level, and deciding to actually spawn in scrap and enemies. I'm not fully sure what the intended purpose of this is, but the vanilla value is 0.3, while the mod sets it to 0 by default.
+  - LCSoundTool
+    - Should Loading Music Play
+      - Enable this if you wish to have music play while levels load in
+    - Loading Music Fade Time
+      - Determines how long it will take for the music to fully fade out once the level finishes loading. The default value of 15 seconds is intended to make the music fade out the moment you land on the ground
+    - Loading Music Volume
+      - How loud the loading music should be
