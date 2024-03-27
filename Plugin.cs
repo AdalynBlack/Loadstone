@@ -17,7 +17,7 @@ namespace Loadstone;
 
 //   BepInEx
 // Loadstone
-[BepInPlugin("com.adibtw.loadstone", "Loadstone", "0.0.2")]
+[BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("com.github.lethalmods.lethalexpansioncore", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("LCSoundTool", BepInDependency.DependencyFlags.SoftDependency)]
