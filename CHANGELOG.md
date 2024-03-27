@@ -1,3 +1,6 @@
+## v0.0.5
+- Implemented a conflict detection system to warn of potential mod conflicts
+
 ## v0.0.4
 - Implemented optional loading music via LCSoundTool
 	- To enable the loading music, you'll need to install LCSoundTool and enable it in the config
