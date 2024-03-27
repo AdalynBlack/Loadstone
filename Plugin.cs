@@ -38,28 +38,24 @@ public class Loadstone : BaseUnityPlugin
 		LoadstoneConfig.BindAllTo(Config);
 
 		Logger.LogDebug("Patching Methods...");
-		TryPatch(typeof(StartOfRoundPatches));
-		TryPatch(typeof(RoundManagerPatches));
-		TryPatch(typeof(DungeonPatches));
-		TryPatch(typeof(DungeonGeneratorPatches));
+		ConflictResolver.TryPatch(typeof(StartOfRoundPatches));
+		ConflictResolver.TryPatch(typeof(RoundManagerPatches));
+		ConflictResolver.TryPatch(typeof(DungeonPatches));
+		ConflictResolver.TryPatch(typeof(DungeonGeneratorPatches));
 
 		CheckModded();
 
 #if DEBUG
 		Logger.LogDebug("Patching in profiler...");
-		TryPatch(typeof(ProfilingPatches));
+		ConflictResolver.TryPatch(typeof(ProfilingPatches));
 #endif
 
 		Logger.LogInfo("Plugin Loadstone is loaded!");
 	}
 
-	private void TryPatch(Type type)
+	private void Start()
 	{
-		try {
-			Harmony.CreateAndPatchAll(type);
-		} catch (Exception exception) {
-			Logger.LogFatal($"Loadstone failed to patch {type}. The following exception was received:\n{exception.ToString()}");
-		}
+		ConflictResolver.CheckUnknownPatches();
 	}
 
 	private void CheckModded()
@@ -89,13 +85,13 @@ public class Loadstone : BaseUnityPlugin
 	private void PatchExpansionCore() {
 		Logger.LogDebug("Patching ExpansionCore");
 
-		TryPatch(typeof(DungeonGenerator_PatchPatches));
+		ConflictResolver.TryPatch(typeof(DungeonGenerator_PatchPatches));
 	}
 
 	private void PatchLCSoundTool() {
 		Logger.LogDebug("Patching with LCSoundTool");
 
-		TryPatch(typeof(RoundManagerMusicPatches));
+		ConflictResolver.TryPatch(typeof(RoundManagerMusicPatches));
 	}
 }
 
