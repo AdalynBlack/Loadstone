@@ -1,3 +1,6 @@
+## v0.0.6
+- Converted the audio file from wav to ogg to save on file space. Fixes #4
+
 ## v0.0.5
 - Implemented a conflict detection system to warn of potential mod conflicts
 
