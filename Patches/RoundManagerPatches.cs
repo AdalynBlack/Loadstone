@@ -144,6 +144,14 @@ public class RoundManagerPatches
 		return newInstructions;
 	}
 
+	[HarmonyPatch("GenerateNewLevelClientRpc")]
+	[HarmonyPostfix]
+	static void GenerateNewLevelClientRpcPrefixPath(int randomSeed)
+	{
+		Loadstone.HarmonyLog.LogDebug($"Random seed: {randomSeed}");
+		HUDManager.Instance.DisplayTip("Random Seed", $"{randomSeed}");
+	}
+
 	[HarmonyPatch("GenerateNewFloor")]
 	[HarmonyPrefix]
 	static void GenerateNewFloorPatch(RoundManager __instance)
