@@ -18,36 +18,6 @@ namespace Loadstone.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 public class RoundManagerPatches
 {
-	static IEnumerable<CodeInstruction> PatchUnorderedSearch(IEnumerable<CodeInstruction> instructions, Type type)
-	{
-		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(false, new CodeMatch(OpCodes.Call, AccessTools.Method(
-							typeof(UnityEngine.Object), "FindObjectsOfType",
-							generics: new Type[] { type })))
-			.InsertAndAdvance(
-					new CodeInstruction(OpCodes.Ldc_I4_0))
-			.SetOperandAndAdvance(AccessTools.Method(typeof(UnityEngine.Object), "FindObjectsByType",
-					parameters: new Type[] { typeof(FindObjectsSortMode) },
-					generics: new Type[] { type }))
-			.InstructionEnumeration();
-		
-		return newInstructions;
-	}
-
-	[HarmonyPatch("SpawnSyncedProps")]
-	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> SpawnSyncedPropsFindPatch(IEnumerable<CodeInstruction> instructions)
-	{
-		return PatchUnorderedSearch(instructions, typeof(SpawnSyncedObject));
-	}
-
-	[HarmonyPatch("GenerateNewFloor")]
-	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> GenerateNewFloorFindPatch(IEnumerable<CodeInstruction> instructions)
-	{
-		return PatchUnorderedSearch(instructions, typeof(EntranceTeleport));
-	}
-
 	[HarmonyPatch("LoadNewLevelWait", MethodType.Enumerator)]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> LoadNewLevelWaitPatch(IEnumerable<CodeInstruction> instructions)
