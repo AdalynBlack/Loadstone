@@ -8,6 +8,7 @@ public static class LoadstoneConfig
 {
 	public static ConfigFile LoadstoneFile;
 
+	public static ConfigEntry<SeedDisplayType> SeedDisplayConfig;
 	public static ConfigEntry<float> PostLoadStartDelay;
 	public static ConfigEntry<float> PostGenerateSpawnDelay;
 
@@ -18,12 +19,25 @@ public static class LoadstoneConfig
 	public static ConfigEntry<float> LoadingMusicFadeTime;
 	public static ConfigEntry<float> LoadingMusicVolume;
 
+	public enum SeedDisplayType
+	{
+		Popup,
+		Darken,
+		JustLog
+	}
+
 	public static void BindAllTo(ConfigFile config)
 	{
 		LoadstoneFile = config;
 
 		// Tweaks
 		// 	Lethal
+		SeedDisplayConfig = LoadstoneFile.Bind<SeedDisplayType>(
+				"Tweaks.Lethal",
+				"Seed Display Type",
+				SeedDisplayType.Popup,
+				"Decides how the random seed should appear when loading into a level. The vanilla value is \"Darken\"");
+
 		PostLoadStartDelay = LoadstoneFile.Bind<float>(
 				"Tweaks.Lethal",
 				"Post-load Start Delay",

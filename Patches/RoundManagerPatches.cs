@@ -101,6 +101,9 @@ public class RoundManagerPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> GenerateNewLevelPatch(IEnumerable<CodeInstruction> instructions)
 	{
+		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
+			return instructions;
+
 		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
 
 		var newInstructions = new CodeMatcher(instructions)
@@ -119,6 +122,10 @@ public class RoundManagerPatches
 	static void GenerateNewLevelClientRpcPrefixPath(int randomSeed)
 	{
 		Loadstone.HarmonyLog.LogInfo($"Random seed: {randomSeed}");
+
+		if (LoadstoneConfig.SeedDisplayConfig.Value != LoadstoneConfig.SeedDisplayType.Popup)
+			return;
+
 		HUDManager.Instance.DisplayTip("Random Seed", $"{randomSeed}");
 	}
 

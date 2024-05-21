@@ -31,7 +31,7 @@ public class StartOfRoundPatches
 
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Successfully injected custom time value of \"{shipDoorWaitTime}\" into \"StartOfRound::OpenShipDoors\"");
+		Loadstone.TranspilerLog.LogDebug($"Validating injected custom time value of \"{shipDoorWaitTime}\" into \"StartOfRound::OpenShipDoors\"");
 		return newInstructions;
 	}
 
@@ -39,6 +39,9 @@ public class StartOfRoundPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OnLoadCompletePatch(IEnumerable<CodeInstruction> instructions)
 	{
+		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
+			return instructions;
+
 		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
 
 		var newInstructions = new CodeMatcher(instructions)
@@ -52,7 +55,7 @@ public class StartOfRoundPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Successfully disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
+		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
 		return newInstructions;
 	}
 
@@ -60,6 +63,9 @@ public class StartOfRoundPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OnLoadPatch(IEnumerable<CodeInstruction> instructions)
 	{
+		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
+			return instructions;
+
 		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
 
 		var newInstructions = new CodeMatcher(instructions)
@@ -69,7 +75,7 @@ public class StartOfRoundPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Successfully disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
+		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
 		return newInstructions;
 	}
 }

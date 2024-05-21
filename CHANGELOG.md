@@ -1,3 +1,11 @@
+## v0.0.8
+- Removed unsorted search patches
+	- These patches didn't cover *nearly* every case in the game, and the overall performance impact is small enough to be disregarded for this mod, in favor of better compatibility with other mods and future updates
+- Added seed pop-up config
+
+## v0.0.7
+- Added the random seed pop-up as an on-screen overlay
+
 ## v0.0.6
 - Converted the audio file from wav to ogg to save on file space. Fixes #4
 
