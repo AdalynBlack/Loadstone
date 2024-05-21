@@ -67,8 +67,7 @@ public class DungeonPatches {
 						new CodeMatch(OpCodes.Ldloca_S),
 						new CodeMatch(OpCodes.Call))
 				.Advance(1)
-				.Insert(
-						new CodeInstruction(OpCodes.Ret))
+				.Insert(new CodeInstruction(OpCodes.Ret))
 				.Pos;
 
 			matcher.Advance(-1).CreateLabel(out Label endLabel);
