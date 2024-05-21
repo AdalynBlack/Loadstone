@@ -148,7 +148,7 @@ public class RoundManagerPatches
 	[HarmonyPostfix]
 	static void GenerateNewLevelClientRpcPrefixPath(int randomSeed)
 	{
-		Loadstone.HarmonyLog.LogDebug($"Random seed: {randomSeed}");
+		Loadstone.HarmonyLog.LogInfo($"Random seed: {randomSeed}");
 		HUDManager.Instance.DisplayTip("Random Seed", $"{randomSeed}");
 	}
 
