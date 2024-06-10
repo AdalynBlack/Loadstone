@@ -47,7 +47,7 @@ public static class LoadstoneConfig
 		DungeonAsyncMaxTime = LoadstoneFile.Bind<float>(
 				"Tweaks.Dungeon",
 				"Async Gen Wait Time",
-				30f,
+				20f,
 				new ConfigDescription(
 					"How long to spend generating the dungeon each frame, in milliseconds. There is no vanilla value",
 					acceptableValues: new AcceptableValueRange<float>(1, 1000)));
