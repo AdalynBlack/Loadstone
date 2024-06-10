@@ -1,3 +1,9 @@
+## v0.0.9
+- Improvements to async navmesh generation
+	- The game should now properly distribute navmesh generation over multiple frames
+- Removed Async Gen Wait Time and Post-Load Start Delay
+	- These two options didn't significantly improve performance, and caused issues in certain edge cases, resulting in partially loaded moons without functional entrances or lighting
+
 ## v0.0.8
 - Removed unsorted search patches
 	- These patches didn't cover *nearly* every case in the game, and the overall performance impact is small enough to be disregarded for this mod, in favor of better compatibility with other mods and future updates
