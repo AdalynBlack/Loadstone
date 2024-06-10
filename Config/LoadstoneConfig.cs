@@ -9,8 +9,6 @@ public static class LoadstoneConfig
 	public static ConfigFile LoadstoneFile;
 
 	public static ConfigEntry<SeedDisplayType> SeedDisplayConfig;
-	public static ConfigEntry<float> PostLoadStartDelay;
-	public static ConfigEntry<float> PostGenerateSpawnDelay;
 
 	public static ConfigEntry<bool> ShouldGenAsync;
 	public static ConfigEntry<float> DungeonAsyncMaxTime;
@@ -37,22 +35,6 @@ public static class LoadstoneConfig
 				"Seed Display Type",
 				SeedDisplayType.Popup,
 				"Decides how the random seed should appear when loading into a level. The vanilla value is \"Darken\"");
-
-		PostLoadStartDelay = LoadstoneFile.Bind<float>(
-				"Tweaks.Lethal",
-				"Post-load Start Delay",
-				0f,
-				new ConfigDescription(
-					"How long to wait (in seconds) between all players loading in and starting the game. The vanilla value is 0.5",
-					acceptableValues: new AcceptableValueRange<float>(0, 5)));
-	
-		PostGenerateSpawnDelay = LoadstoneFile.Bind<float>(
-				"Tweaks.Lethal",
-				"Post-generate Spawn Delay",
-				0f,
-				new ConfigDescription(
-					"How long to wait (in seconds) between all players finishing level generation, and spawning in scrap and enemies. The vanilla value is 0.3",
-					acceptableValues: new AcceptableValueRange<float>(0, 5)));
 
 		//	Dungeon
 		ShouldGenAsync = LoadstoneFile.Bind<bool>(

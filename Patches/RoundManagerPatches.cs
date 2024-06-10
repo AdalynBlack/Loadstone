@@ -18,50 +18,6 @@ namespace Loadstone.Patches;
 [HarmonyPatch(typeof(RoundManager))]
 public class RoundManagerPatches
 {
-	[HarmonyPatch("LoadNewLevelWait", MethodType.Enumerator)]
-	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> LoadNewLevelWaitPatch(IEnumerable<CodeInstruction> instructions)
-	{
-		float levelLoadWaitTime = LoadstoneConfig.PostGenerateSpawnDelay.Value;
-		Loadstone.TranspilerLog.LogDebug($"Attempting to inject custom time value of \"{levelLoadWaitTime}\" into \"RoundManager::LoadNewLevelWait\"");
-
-		var newInstructions = new CodeMatcher(instructions)
-			// State starts at 2, which falls through to 3
-			.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4_3)) // Skip yield return
-			.Advance(-1)
-			.RemoveInstructions(5)
-
-			// State 3 falls through to 4
-			.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4_4)) // Skip yield return
-			.Advance(-1)
-			.RemoveInstructions(5)
-
-			// State 4 falls through to 5
-			.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4_5)) // Keep dungeon check in place
-			.Advance(-1)
-
-			// State 5 has a custom time inserted
-			.MatchForward(false,
-					new CodeMatch(OpCodes.Ldc_R4), // Find the first "load Float32 instruction" that is followed by creating a "WaitForSeconds" object and replace the value loaded with shipDoorWaitTime
-					new CodeMatch(OpCodes.Newobj))
-
-			.SetAndAdvance(
-					OpCodes.Ldsfld,
-					typeof(LoadstoneConfig).GetField("PostGenerateSpawnDelay"))
-			.InsertAndAdvance(new CodeInstruction(
-						OpCodes.Callvirt, AccessTools.Method(typeof(ConfigEntry<float>), "get_Value")))
-
-			// State 7 falls through to 8
-			.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4_7)) // Skip yield return
-			.Advance(-1)
-			.RemoveInstructions(5)
-
-			.InstructionEnumeration();
-
-		Loadstone.TranspilerLog.LogDebug($"Validating injected custom time value of \"{levelLoadWaitTime}\" into \"RoundManager::LoadNewLevelWait\"");
-		return newInstructions;
-	}
-
 	[HarmonyPatch("Generator_OnGenerationStatusChanged")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> StatusChangedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)

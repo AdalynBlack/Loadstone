@@ -11,30 +11,6 @@ namespace Loadstone.Patches;
 
 public class StartOfRoundPatches
 {
-	[HarmonyPatch(typeof(StartOfRound), "OpenShipDoors", MethodType.Enumerator)]
-	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> OpenShipDoorsPatch(IEnumerable<CodeInstruction> instructions)
-	{
-		float shipDoorWaitTime = LoadstoneConfig.PostLoadStartDelay.Value;
-		Loadstone.TranspilerLog.LogDebug($"Attempting to inject custom time value of \"{shipDoorWaitTime}\" into \"StartOfRound::OpenShipDoors\"");
-
-		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(false,
-					new CodeMatch(OpCodes.Ldc_R4), // Find the first "load Float32 instruction" that is followed by creating a "WaitForSeconds" object and replace the value loaded with shipDoorWaitTime
-					new CodeMatch(OpCodes.Newobj))
-
-			.SetAndAdvance(
-					OpCodes.Ldsfld,
-					typeof(LoadstoneConfig).GetField("PostLoadStartDelay"))
-			.InsertAndAdvance(new CodeInstruction(
-						OpCodes.Callvirt, AccessTools.Method(typeof(ConfigEntry<float>), "get_Value")))
-
-			.InstructionEnumeration();
-
-		Loadstone.TranspilerLog.LogDebug($"Validating injected custom time value of \"{shipDoorWaitTime}\" into \"StartOfRound::OpenShipDoors\"");
-		return newInstructions;
-	}
-
 	[HarmonyPatch(typeof(StartOfRound), "SceneManager_OnLoadComplete1")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OnLoadCompletePatch(IEnumerable<CodeInstruction> instructions)
