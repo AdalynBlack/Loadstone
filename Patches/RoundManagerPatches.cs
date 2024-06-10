@@ -101,12 +101,15 @@ public class RoundManagerPatches
 
 		navMeshSurface.RemoveData();
 		navMeshSurface.AddData();
+
+		Loadstone.HarmonyLog.LogDebug("Updated navmesh");
 	}
 
 	[HarmonyPatch("SpawnOutsideHazards")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
 	{
+		Loadstone.TranspilerLog.LogDebug($"Writing SpawnOutsideHazards Transpiler");
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Callvirt, AccessTools.Method(
@@ -135,12 +138,16 @@ public class RoundManagerPatches
 			.GetMethod("CalculateWorldBounds", BindingFlags.NonPublic | BindingFlags.Instance)
 			.Invoke(navMeshSurface, new object[] {sources});
 						
-		Loadstone.HarmonyLog.LogDebug($"Updated navmesh with {sources.Count} obstacles");
+		Loadstone.HarmonyLog.LogDebug($"Updating navmesh with {sources.Count} obstacles");
+
+		var buildSettings = navMeshSurface.GetBuildSettings();
+		buildSettings.tileSize = 64;
+		buildSettings.maxJobWorkers = 4;
 
 		roundManager.StartCoroutine(NavMeshUpdateCheck(
 					NavMeshBuilder.UpdateNavMeshDataAsync(
 						navMeshSurface.navMeshData,
-						navMeshSurface.GetBuildSettings(),
+						buildSettings,
 						sources,
 						bounds),
 					navMeshSurface));
