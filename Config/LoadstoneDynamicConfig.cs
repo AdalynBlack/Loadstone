@@ -12,8 +12,6 @@ internal static class LoadstoneDynamicConfig
 	internal static void RegisterDynamicConfig()
 	{
 		AddConfigItems(new BaseConfigItem[] {
-				new BoolCheckBoxConfigItem(LoadstoneConfig.ShouldGenAsync,
-						new BoolCheckBoxOptions {RequiresRestart = false}),
 				new FloatSliderConfigItem(LoadstoneConfig.DungeonAsyncMaxTime, 
 						new FloatSliderOptions {
 							RequiresRestart = false,

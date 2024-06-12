@@ -13,7 +13,7 @@ public class AsyncDungeonPatches
 	[HarmonyPrefix]
 	static void GenerateNewFloorPatch(RoundManager __instance)
 	{
-		__instance.dungeonGenerator.Generator.GenerateAsynchronously = LoadstoneConfig.ShouldGenAsync.Value;
+		__instance.dungeonGenerator.Generator.GenerateAsynchronously = LoadstoneConfig.AsyncDungeon.Value;
 		__instance.dungeonGenerator.Generator.PauseBetweenRooms = 0f;
 		__instance.dungeonGenerator.Generator.MaxAsyncFrameMilliseconds = LoadstoneConfig.DungeonAsyncMaxTime.Value;
 	}

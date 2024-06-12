@@ -34,11 +34,23 @@ public class Loadstone : BaseUnityPlugin
 		LoadstoneConfig.BindAllTo(Config);
 
 		Logger.LogDebug("Patching Methods...");
-		ConflictResolver.TryPatch(typeof(AsyncDungeonPatches));
-		ConflictResolver.TryPatch(typeof(FromProxyPatches));
-		ConflictResolver.TryPatch(typeof(NavmeshPatches));
+
+		if (LoadstoneConfig.StatusChangeFix.Value)
+		{
+			ConflictResolver.TryPatch(typeof(StatusChangedFixer));
+
+			if (LoadstoneConfig.AsyncDungeon.Value)
+			{
+				ConflictResolver.TryPatch(typeof(AsyncDungeonPatches));
+
+				if (LoadstoneConfig.DungeonRealization.Value)
+					ConflictResolver.TryPatch(typeof(FromProxyPatches));
+			}
+		}
+
+		if (LoadstoneConfig.AsyncNavmesh.Value)
+			ConflictResolver.TryPatch(typeof(NavmeshPatches));
 		ConflictResolver.TryPatch(typeof(ScreenDarkenPatches));
-		ConflictResolver.TryPatch(typeof(StatusChangedFixer));
 
 		CheckModded();
 
