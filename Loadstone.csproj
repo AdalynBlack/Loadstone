@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
-		<Product>Loadstone</Product>
+		<Product>LoadstoneNightly</Product>
 		<Description>Reduces stuttering during level loading</Description>
 		<Version>0.1.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
