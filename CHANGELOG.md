@@ -5,7 +5,7 @@
 	- Every feature is now a self contained module that can be turned on and off with its own config option
 	- Module toggles currently will not work properly without a game restart
 - First nightly build of Loadstone released
-	- Nightly builds can be found on thunderstore at https://thunderstore.io/c/lethal-company/p/AdiBTW/Loadstone-Nightly/
+	- Nightly builds can be found on thunderstore at https://thunderstore.io/c/lethal-company/p/AdiBTW/LoadstoneNightly/
 
 ## v0.0.9
 - Improvements to async navmesh generation
