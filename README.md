@@ -20,16 +20,24 @@ This mod provides a few config options that can be used to customize exactly how
 
 All config options can be modified in-game without restarting through LethalConfig if it is installed.
 
-- Tweaks
-  - Dungeon
-    - Asynchronous Generation
-      - Toggles Loadstone's forced async level generation. This is on by default, and if turned off *will* cause stuttering as the level generates. The vanilla game sets async generation to be off by default, and as such, most issues with level loading should be able to be fixed by disabling this option. The mod still improves performance in other places, but a lot of the performance uplift does come from this one option.
-    - Async Gen Wait Time
-      - This config option tells the game's map generator how long it's allowed to spend each frame generating the level. Increasing this will reduce your framerate while loading, but allow for faster load times, while decreasing it will increase your framerate while loading, at the cost of longer load times. I hope to eventually convert the level generator to be truly asynchronous so that map generation can happen at full speed without compromising framerates, but that will require a deep rework of existing systems.
-  - LCSoundTool
-    - Should Loading Music Play
-      - Enable this if you wish to have music play while levels load in
-    - Loading Music Fade Time
-      - Determines how long it will take for the music to fully fade out once the level finishes loading. The default value of 15 seconds is intended to make the music fade out the moment you land on the ground
-    - Loading Music Volume
-      - How loud the loading music should be
+- Async Dungeon Module
+  - Toggles Loadstone's forced async level generation. This is on by default, and if turned off *will* cause stuttering as the level generates. The vanilla game sets async generation to be off by default, and as such, most issues with level loading should be able to be fixed by disabling this option. The mod still improves performance in other places, but a lot of the performance uplift does come from this one option.
+  - Requires the Status Change Fix module to be enabled
+  - Async Gen Wait Time
+    - This config option tells the game's map generator how long it's allowed to spend each frame generating the level. Increasing this will reduce your framerate while loading, but allow for faster load times, while decreasing it will increase your framerate while loading, at the cost of longer load times. I hope to eventually convert the level generator to be truly asynchronous so that map generation can happen at full speed without compromising framerates, but that will require a deep rework of existing systems.
+- Async Navmesh Module
+  - Enables Loadstone's async navmesh module. This module configures the game to generate the navmesh used for AI pathing in the background on multiple threads, rather than pausing the game until the calculations are done
+- Dungeon Realization Module
+  - Enables Loadstone's dungeon realization module, which allows the dungeon to be spawned in across multiple frames to reduce lag
+  - Requires the Async Dungone module to be enabled
+- Screen Darkening Module
+  - Affects the game's screen darkening effect on level gen. Can be configured between the vanilla mode (darken), a popup message, or disabled entirely, with a log message containing the level seed instead
+- Status Change Fix Module
+  - This module fixes an oversight in LC's implementation of the dungeon completion callback which prevented it from ever being run correctly
+- LCSoundTool
+  - Should Loading Music Play
+    - Enable this if you wish to have music play while levels load in
+  - Loading Music Fade Time
+    - Determines how long it will take for the music to fully fade out once the level finishes loading. The default value of 15 seconds is intended to make the music fade out the moment you land on the ground
+  - Loading Music Volume
+    - How loud the loading music should be

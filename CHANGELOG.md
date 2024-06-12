@@ -1,3 +1,12 @@
+## v0.1.0
+- Heavy internal code reorganization
+	- This will make adding and modifying features much easier in the future
+- Module toggles
+	- Every feature is now a self contained module that can be turned on and off with its own config option
+	- Module toggles currently will not work properly without a game restart
+- First nightly build of Loadstone released
+	- Nightly builds can be found on thunderstore at https://thunderstore.io/c/lethal-company/p/AdiBTW/Loadstone-Nightly/
+
 ## v0.0.9
 - Improvements to async navmesh generation
 	- The game should now properly distribute navmesh generation over multiple frames
