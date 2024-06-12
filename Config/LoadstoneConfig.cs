@@ -79,14 +79,14 @@ public static class LoadstoneConfig
 
 		// LCSoundTool
 		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(
-				"Tweaks.LCSoundTool",
+				"LCSoundTool",
 				"Should Loading Music Play",
 				false,
 				new ConfigDescription(
 					"Should we play loading music as the level loads in? Requires LCSoundTool to be installed"));
 
 		LoadingMusicFadeTime = LoadstoneFile.Bind<float>(
-				"Tweaks.LCSoundTool",
+				"LCSoundTool",
 				"Loading Music Fade Time",
 				15f,
 				new ConfigDescription(
@@ -94,7 +94,7 @@ public static class LoadstoneConfig
 					acceptableValues: new AcceptableValueRange<float>(0, 30)));
 
 		LoadingMusicVolume = LoadstoneFile.Bind<float>(
-				"Tweaks.LCSoundTool",
+				"LCSoundTool",
 				"Loading Music Volume",
 				0.75f,
 				new ConfigDescription(
