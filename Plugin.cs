@@ -27,8 +27,8 @@ public class Loadstone : BaseUnityPlugin
 		Logger.LogDebug("Loading Loadstone...");
 
 		// I prepended spaces because I hate having it right next to the colon in logs lol
-		HarmonyLog = BepInEx.Logging.Logger.CreateLogSource(" Loadstone(Harmony)");
-		TranspilerLog = BepInEx.Logging.Logger.CreateLogSource(" Loadstone(Transpiler)");
+		HarmonyLog = BepInEx.Logging.Logger.CreateLogSource($" {PluginInfo.PLUGIN_NAME}(Harmony)");
+		TranspilerLog = BepInEx.Logging.Logger.CreateLogSource($" {PluginInfo.PLUGIN_NAME}(Transpiler)");
 
 		Logger.LogDebug("Loading Configs...");
 		LoadstoneConfig.BindAllTo(Config);
