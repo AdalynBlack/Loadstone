@@ -1,3 +1,10 @@
+## v0.1.1
+- Fixed nightly branch using the wrong audio clip name
+- Improved navmesh async generation
+  - The dungeon will now be generated asynchronously, as opposed to just the surface
+- Updated the logger names for nightly
+- Patched out some inefficient and unnecessary object searches
+
 ## v0.1.0
 - Heavy internal code reorganization
 	- This will make adding and modifying features much easier in the future
