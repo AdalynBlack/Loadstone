@@ -51,6 +51,7 @@ public class Loadstone : BaseUnityPlugin
 		if (LoadstoneConfig.AsyncNavmesh.Value)
 			ConflictResolver.TryPatch(typeof(NavmeshPatches));
 		ConflictResolver.TryPatch(typeof(ScreenDarkenPatches));
+		ConflictResolver.TryPatch(typeof(ObjectFindPatches));
 
 		CheckModded();
 
