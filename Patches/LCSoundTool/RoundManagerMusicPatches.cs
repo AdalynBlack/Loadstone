@@ -10,7 +10,7 @@ namespace Loadstone.Patches.LCSoundTool;
 public class RoundManagerMusicPatches
 {
 	static internal AudioSource loadingAudioSource;
-	static internal AudioClip loadingAudioClip = SoundTool.GetAudioClip("AdiBTW-Loadstone", "LoadstoneLoading.ogg");
+	static internal AudioClip loadingAudioClip = SoundTool.GetAudioClip($"AdiBTW-{PluginInfo.PLUGIN_NAME}", "LoadstoneLoading.ogg");
 
 	[HarmonyPatch("Awake")]
 	[HarmonyPrefix]
