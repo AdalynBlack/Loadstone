@@ -1,3 +1,4 @@
+using DunGen.Adapters;
 using HarmonyLib;
 using System;
 using System.Collections;
@@ -16,7 +17,8 @@ public class NavmeshPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Writing SpawnOutsideHazards Transpiler");
+		Loadstone.TranspilerLog.LogDebug("Writing SpawnOutsideHazards Transpiler");
+
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
 				new CodeMatch(OpCodes.Callvirt, AccessTools.Method(
@@ -34,24 +36,63 @@ public class NavmeshPatches
 					parameters: new Type[] {typeof(NavMeshSurface), typeof(RoundManager)}))
 			.InstructionEnumeration();
 
+		Loadstone.TranspilerLog.LogDebug("Verifying SpawnOutsideHazards Transpiler");
 		return newInstructions;
 	}
 
-	static void GenerateNavMeshAsync(NavMeshSurface navMeshSurface, RoundManager roundManager) {
+	[HarmonyDebug]
+	[HarmonyPatch(typeof(UnityNavMeshAdapter), "BakeFullDungeon")]
+	[HarmonyTranspiler]
+	static IEnumerable<CodeInstruction> BakeFullDungeonPatch(IEnumerable<CodeInstruction> instructions)
+	{
+		Loadstone.TranspilerLog.LogDebug("Writing UnityNavMeshAdapter Transpiler");
+
+		var newInstructions = new CodeMatcher(instructions)
+			.MatchForward(false,
+					new CodeMatch(OpCodes.Callvirt, AccessTools.DeclaredMethod(typeof(NavMeshSurface), "BuildNavMesh")))
+			.Repeat( matcher =>
+					matcher.InsertAndAdvance(
+						new CodeInstruction(OpCodes.Ldarg_0))
+					.SetOperandAndAdvance(
+						AccessTools.DeclaredMethod(typeof(NavmeshPatches), "GenerateNavMeshAsync")))
+			.InstructionEnumeration();
+
+		Loadstone.TranspilerLog.LogDebug("Verifying UnityNavMeshAdapter Transpiler");
+		return newInstructions;
+	}
+
+	static void GenerateNavMeshAsync(NavMeshSurface navMeshSurface, MonoBehaviour coroutineHijack) {
 		List<NavMeshBuildSource> sources = (List<NavMeshBuildSource>)typeof(NavMeshSurface)
 			.GetMethod("CollectSources", BindingFlags.NonPublic | BindingFlags.Instance)
 			.Invoke(navMeshSurface, new object[] {});
-		Bounds bounds = (Bounds)typeof(NavMeshSurface)
-			.GetMethod("CalculateWorldBounds", BindingFlags.NonPublic | BindingFlags.Instance)
-			.Invoke(navMeshSurface, new object[] {sources});
+
+		Bounds bounds = new Bounds(navMeshSurface.center, navMeshSurface.size);
+		if (navMeshSurface.collectObjects != CollectObjects.Volume)
+		{
+			bounds = (Bounds)typeof(NavMeshSurface)
+				.GetMethod("CalculateWorldBounds", BindingFlags.NonPublic | BindingFlags.Instance)
+				.Invoke(navMeshSurface, new object[] {sources});
+		}
 						
 		Loadstone.HarmonyLog.LogDebug($"Updating navmesh with {sources.Count} obstacles");
 
 		var buildSettings = navMeshSurface.GetBuildSettings();
-		buildSettings.tileSize = 64;
-		buildSettings.maxJobWorkers = 4;
+		//buildSettings.tileSize = 64;
+		//buildSettings.maxJobWorkers = 4;
+		
+		if (navMeshSurface.navMeshData != null)
+		{
+			navMeshSurface.navMeshData.position = navMeshSurface.transform.position;
+			navMeshSurface.navMeshData.rotation = navMeshSurface.transform.rotation;
+		} else {
+			navMeshSurface.navMeshData = new NavMeshData(buildSettings.agentTypeID)
+			{
+				position = navMeshSurface.transform.position,
+				rotation = navMeshSurface.transform.rotation
+			};
+		}
 
-		roundManager.StartCoroutine(NavMeshUpdateCheck(
+		coroutineHijack.StartCoroutine(NavMeshUpdateCheck(
 					NavMeshBuilder.UpdateNavMeshDataAsync(
 						navMeshSurface.navMeshData,
 						buildSettings,
@@ -70,5 +111,4 @@ public class NavmeshPatches
 
 		Loadstone.HarmonyLog.LogDebug("Updated navmesh");
 	}
-
 }
