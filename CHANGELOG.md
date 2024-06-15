@@ -1,3 +1,9 @@
+## v0.1.2
+- Added experimental object pooling
+  - Currently expected to be quite buggy, and so is off by default
+  - Has potential to greatly improve load times, but may also increase ram usage slightly, especially with many modded interiors
+- Changed how async dungeon loading works to hopefully improve load times by default for slower PCs
+
 ## v0.1.1
 - Fixed nightly branch using the wrong audio clip name
 - Improved navmesh async generation

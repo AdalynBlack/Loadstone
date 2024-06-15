@@ -34,6 +34,9 @@ All config options can be modified in-game without restarting through LethalConf
   - Affects the game's screen darkening effect on level gen. Can be configured between the vanilla mode (darken), a popup message, or disabled entirely, with a log message containing the level seed instead
 - Status Change Fix Module
   - This module fixes an oversight in LC's implementation of the dungeon completion callback which prevented it from ever being run correctly
+- Object Pooling Module
+  - A highly experimental feature to cache object spawns and re-use them as needed, rather than deleting and respawning them. May cause a slight increase in ram usage, but may also heavily reduce load times
+  - Currently known to cause errors when used with CullCompany
 - LCSoundTool
   - Should Loading Music Play
     - Enable this if you wish to have music play while levels load in
