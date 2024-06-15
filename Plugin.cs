@@ -53,6 +53,9 @@ public class Loadstone : BaseUnityPlugin
 		ConflictResolver.TryPatch(typeof(ScreenDarkenPatches));
 		ConflictResolver.TryPatch(typeof(ObjectFindPatches));
 
+		if (LoadstoneConfig.ObjectPooling.Value)
+			ConflictResolver.TryPatch(typeof(PoolingPatches));
+
 		CheckModded();
 
 		Logger.LogInfo("Plugin Loadstone is loaded!");

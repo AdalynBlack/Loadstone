@@ -19,6 +19,8 @@ public static class LoadstoneConfig
 
 	public static ConfigEntry<bool> StatusChangeFix;
 
+	public static ConfigEntry<bool> ObjectPooling;
+
 	public static ConfigEntry<bool> ShouldLoadingMusicPlay;
 	public static ConfigEntry<float> LoadingMusicFadeTime;
 	public static ConfigEntry<float> LoadingMusicVolume;
@@ -76,6 +78,13 @@ public static class LoadstoneConfig
 				"Enabled",
 				true,
 				"Enables a fix for the game's status change callback, which is non-functional in vanilla. The vanilla value is false");
+		
+		// Object Pooling
+		ObjectPooling = LoadstoneFile.Bind<bool>(
+				"ObjectPooling",
+				"Enabled",
+				false,
+				"!!! EXPERIMENTAL FEATURE !!!\nEnables object pooling for dungeon spawning and certain parts of initial level generation. This can greatly improve load times, but may increase ram usage in modpacks with many custom interiors. This feature is currently very experimental. The vanilla value is false");
 
 		// LCSoundTool
 		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(
