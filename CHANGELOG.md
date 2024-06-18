@@ -1,3 +1,14 @@
+## v0.1.3
+- Added the DunGen Optimizations module
+  - Improves particularly slow parts of DunGen's level generation algorithm. This module will be getting more updates and improvements in the future
+- Updated Object Pooling
+  - Object Pooling is still experimental due to compatibility issues with other mods
+  - Object Pooling has received improvements to which objects it is able to pool
+    - Most tiles can now be pooled properly without issues
+    - Previously, tiles would be deleted due to DunGen regenerating the level from scratch when an error occurred
+      - Now, DunGen will properly release tiles when regenerating the level, substantially increasing performance
+  - Object Pooling has been updated to work better with NetworkObjects
+
 ## v0.1.2
 - Added experimental object pooling
   - Currently expected to be quite buggy, and so is off by default

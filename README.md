@@ -34,6 +34,8 @@ All config options can be modified in-game without restarting through LethalConf
   - Affects the game's screen darkening effect on level gen. Can be configured between the vanilla mode (darken), a popup message, or disabled entirely, with a log message containing the level seed instead
 - Status Change Fix Module
   - This module fixes an oversight in LC's implementation of the dungeon completion callback which prevented it from ever being run correctly
+- DunGen Optimization Module
+  - Optimizes the internal workings of DunGen, the tool that LC uses to generate facility layouts
 - Object Pooling Module
   - A highly experimental feature to cache object spawns and re-use them as needed, rather than deleting and respawning them. May cause a slight increase in ram usage, but may also heavily reduce load times
   - Currently known to cause errors when used with CullCompany
