@@ -10,6 +10,8 @@ namespace Loadstone.Patches;
 
 public class AsyncDungeonPatches
 {
+	// Replaces DunGen's async frame skipping to make it run for a certain amount of time each frame, rather than targeting a specific framerate
+	// This is meant to improve load times on lower end PCs, at the cost of lower framerates while loading
 	[HarmonyPatch(typeof(DungeonGenerator), "ShouldSkipFrame")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> ShouldSkipFrameTranspiler(IEnumerable<CodeInstruction> instructions)

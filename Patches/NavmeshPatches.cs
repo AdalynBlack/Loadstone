@@ -13,6 +13,7 @@ namespace Loadstone.Patches;
 
 public class NavmeshPatches
 {
+	// Replaces NavMesh generation with a custom async version for the surface
 	[HarmonyPatch(typeof(RoundManager), "SpawnOutsideHazards")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
@@ -40,6 +41,7 @@ public class NavmeshPatches
 		return newInstructions;
 	}
 
+	// Replaces NavMesh generation with a custom async version for DunGen
 	[HarmonyPatch(typeof(UnityNavMeshAdapter), "BakeFullDungeon")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> BakeFullDungeonPatch(IEnumerable<CodeInstruction> instructions)

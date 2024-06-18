@@ -7,6 +7,7 @@ namespace Loadstone.Patches;
 
 public class ScreenDarkenPatches
 {
+	// Disables the screen darkening effect based on load-time configs
 	[HarmonyPatch(typeof(RoundManager), "GenerateNewLevelClientRpc")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> GenerateNewLevelPatch(IEnumerable<CodeInstruction> instructions)
@@ -39,6 +40,7 @@ public class ScreenDarkenPatches
 		HUDManager.Instance.DisplayTip("Random Seed", $"{randomSeed}");
 	}
 
+	// Disables the screen darkening effect based on load-time configs
 	[HarmonyPatch(typeof(StartOfRound), "SceneManager_OnLoadComplete1")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OnLoadCompletePatch(IEnumerable<CodeInstruction> instructions)
@@ -63,6 +65,7 @@ public class ScreenDarkenPatches
 		return newInstructions;
 	}
 
+	// Disables the screen darkening effect based on load-time configs
 	[HarmonyPatch(typeof(StartOfRound), "SceneManager_OnLoad")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OnLoadPatch(IEnumerable<CodeInstruction> instructions)

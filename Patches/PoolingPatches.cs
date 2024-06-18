@@ -33,6 +33,7 @@ public class PoolingPatches
 		ObjectPool.ReleaseAllObjects();
 	}
 
+	// Replace standard instantiations with an automated object pooled version
 	[HarmonyPatch(typeof(DungeonProxy), "AddTile")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> AddTilePoolingPatch(IEnumerable<CodeInstruction> instructions)
@@ -49,6 +50,7 @@ public class PoolingPatches
 		return newInstructions;
 	}
 	
+	// Replace standard destroy functions with an automated object pool release function
 	[HarmonyPatch(typeof(DungeonProxy), "RemoveTile")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> RemoveTilePoolingPatch(IEnumerable<CodeInstruction> instructions)
@@ -66,6 +68,7 @@ public class PoolingPatches
 		return newInstructions;
 	}
 
+	// Replace standard destroy functions with an automated object pool release function
 	[HarmonyPatch(typeof(UnityUtil), "Destroy")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> DestroyPoolingPatch(IEnumerable<CodeInstruction> instructions)
@@ -87,6 +90,7 @@ public class PoolingPatches
 		return newInstructions;
 	}
 
+	// Replace standard instantiations with an automated object pooled version
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyTranspiler]
 	public static IEnumerable<CodeInstruction> FromProxyPoolingPatch(IEnumerable<CodeInstruction> instructions)

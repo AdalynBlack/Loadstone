@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Loadstone.Patches;
 
+// This class takes a number of instances of the game using FindObjectOfType or similar functions where it is unnecessary to do so
 public class ObjectFindPatches
 {
 	[HarmonyPatch(typeof(InteractTrigger), "Start")]

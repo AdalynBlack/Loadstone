@@ -40,6 +40,7 @@ public class DungenOptimizationPatches
 
 	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary;
 
+	// Extracts the original code for HasMatchingTagPair so we don't use the overridden code
 	[HarmonyPatch(typeof(DungeonFlow), "HasMatchingTagPair")]
 	[HarmonyReversePatch]
 	static bool HasMatchingTagPairOriginal(DungeonFlow flow, Tile tileA, Tile tileB) => throw new NotImplementedException("Reverse Patch Stub");

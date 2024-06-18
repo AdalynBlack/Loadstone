@@ -42,6 +42,7 @@ public class FromProxyPatches {
 		ConversionComplete = true;
 	}
 
+	// Extracts the first for loop's contents from FromProxy
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyReversePatch]
 	static void FromProxyIteration(Dungeon __instance, Dictionary<TileProxy, Tile> dictionary, DungeonGenerator generator, TileProxy tile) {
@@ -91,6 +92,7 @@ public class FromProxyPatches {
 		_ = StartTranspiler(null, null);
 	}
 
+	// Extracts the code in FromProxy after the first for loop
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyReversePatch]
 	static void FromProxyEnd(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator, Dictionary<TileProxy, Tile> dictionary) {

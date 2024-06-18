@@ -6,6 +6,7 @@ namespace Loadstone.Patches;
 
 public class StatusChangedFixer
 {
+	// Fixes the game's OnGenerationStatusChanged delegate
 	[HarmonyPatch(typeof(RoundManager), "Generator_OnGenerationStatusChanged")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> StatusChangedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
