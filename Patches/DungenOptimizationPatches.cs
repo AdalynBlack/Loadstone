@@ -21,7 +21,20 @@ public class DungenOptimizationPatches
 			return false;
 		}
 
-		__result = TagMatchDictionary[__instance][tileA][tileB];
+		try {
+			__result = TagMatchDictionary[__instance][tileA][tileB];
+		} catch (KeyNotFoundException e) {
+			Loadstone.HarmonyLog.LogError($"A tile was not found in the tile tag cache, and is now being cached: {e}");
+
+			if (!TagMatchDictionary[__instance].ContainsKey(tileA))
+				TagMatchDictionary[__instance][tileA] = new Dictionary<Tile, bool>();
+			if (!TagMatchDictionary[__instance].ContainsKey(tileB))
+				TagMatchDictionary[__instance][tileB] = new Dictionary<Tile, bool>();
+
+			TagMatchDictionary[__instance][tileA][tileB] = HasMatchingTagPairOriginal(__instance, tileA, tileB);
+			TagMatchDictionary[__instance][tileB][tileA] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
+		}
+
 		return false;
 	}
 
