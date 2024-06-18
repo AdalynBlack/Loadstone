@@ -27,8 +27,6 @@ public static class ObjectPool
 				returnObject.transform.localRotation = rotation;
 				return returnObject;
 			}
-			if (returnObject == null)
-				Loadstone.HarmonyLog.LogDebug($"A pooled {original.name} was null!");
 		}
 
 		returnObject = Object.Instantiate(original, position, rotation, parent);
