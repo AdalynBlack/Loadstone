@@ -1,3 +1,7 @@
+## v0.1.5
+- Improved DunGen Optimization Module compatibility
+  - Should fix issues with SDM and other modded interiors
+
 ## v0.1.4
 - The Dungeon Realization module now works with Object Pooling
   - Dungeon Realization now applies the Object Pooling patches to itself if it detects Object Pooling is enabled
