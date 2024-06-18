@@ -1,5 +1,6 @@
 using DunGen;
 using HarmonyLib;
+using Loadstone.Config;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -77,10 +78,13 @@ public class FromProxyPatches {
 					new CodeMatch(OpCodes.Leave))
 				.SetOperandAndAdvance(endLabel);
 
-			var codeList = matcher.InstructionsInRange(start, end);
+			var codeList = matcher.InstructionsInRange(start, end).AsEnumerable();
+
+			if (LoadstoneConfig.ObjectPooling.Value)
+				codeList = PoolingPatches.FromProxyPoolingPatch(codeList);
 
 			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's first inner for loop");
-			return codeList.AsEnumerable();
+			return codeList;
 		}
 
 		// make compiler happy

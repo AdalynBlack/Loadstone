@@ -89,7 +89,7 @@ public class PoolingPatches
 
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> FromProxyPoolingPatch(IEnumerable<CodeInstruction> instructions)
+	public static IEnumerable<CodeInstruction> FromProxyPoolingPatch(IEnumerable<CodeInstruction> instructions)
 	{
 		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into Dungeon::FromProxy");
 
