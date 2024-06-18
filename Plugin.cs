@@ -55,6 +55,7 @@ public class Loadstone : BaseUnityPlugin
 
 		if (LoadstoneConfig.ObjectPooling.Value)
 			ConflictResolver.TryPatch(typeof(PoolingPatches));
+		ConflictResolver.TryPatch(typeof(DungenOptimizationPatches));
 
 		CheckModded();
 
