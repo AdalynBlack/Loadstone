@@ -40,7 +40,6 @@ public class NavmeshPatches
 		return newInstructions;
 	}
 
-	[HarmonyDebug]
 	[HarmonyPatch(typeof(UnityNavMeshAdapter), "BakeFullDungeon")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> BakeFullDungeonPatch(IEnumerable<CodeInstruction> instructions)

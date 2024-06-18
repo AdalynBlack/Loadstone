@@ -9,7 +9,6 @@ namespace Loadstone.Patches;
 
 public class ObjectFindPatches
 {
-	[HarmonyDebug]
 	[HarmonyPatch(typeof(InteractTrigger), "Start")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> InteractTriggerPatch(IEnumerable<CodeInstruction> instructions)
