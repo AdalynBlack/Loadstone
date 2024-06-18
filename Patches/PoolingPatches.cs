@@ -2,6 +2,7 @@ using DunGen;
 using HarmonyLib;
 using Loadstone.Config;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -17,11 +18,19 @@ public class PoolingPatches
 						&& ((MethodInfo)i.operand).Name == "Instantiate"
 						&& ((MethodInfo)i.operand).DeclaringType == typeof(UnityEngine.Object));
 
-	[HarmonyPatch(typeof(RoundManager), "Start")]
+	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
+	[HarmonyPostfix]
+	static void GenerateHijack(DungeonGenerator __instance)
+	{
+		var genStats = __instance.GenerationStats;
+		Loadstone.HarmonyLog.LogDebug($"DunGen Stats:\nPre-process Time: {genStats.PreProcessTime}\nMain Path Generation Time: {genStats.MainPathGenerationTime}\nBranch Path Generation Time: {genStats.BranchPathGenerationTime}\nPost-process Time: {genStats.PostProcessTime}\nTotal Time: {genStats.TotalTime}");
+	}
+
+	[HarmonyPatch(typeof(RoundManager), "UnloadSceneObjectsEarly")]
 	[HarmonyPostfix]
 	static void RoundManagerStartHijack()
 	{
-		NetworkManager.Singleton.SceneManager.OnUnload += (_a, _b, _c) => ObjectPool.ReleaseAllObjects();
+		ObjectPool.ReleaseAllObjects();
 	}
 
 	[HarmonyPatch(typeof(DungeonProxy), "AddTile")]
@@ -31,8 +40,7 @@ public class PoolingPatches
 		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into DungeonProxy::AddTile");
 
 		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(false,
-					InstantiateMatcher)
+			.MatchForward(false, InstantiateMatcher)
 			.SetOperandAndAdvance(
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "InstantiateTransparently", parameters: new Type[] { typeof(GameObject), typeof(Transform) }))
 			.InstructionEnumeration();
@@ -58,6 +66,27 @@ public class PoolingPatches
 		return newInstructions;
 	}
 
+	[HarmonyPatch(typeof(UnityUtil), "Destroy")]
+	[HarmonyTranspiler]
+	static IEnumerable<CodeInstruction> DestroyPoolingPatch(IEnumerable<CodeInstruction> instructions)
+	{
+		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into UnityUtil::Destroy");
+
+		var newInstructions = new CodeMatcher(instructions)
+			.MatchForward(false,
+					new CodeMatch(OpCodes.Call, AccessTools.DeclaredMethod(typeof(UnityEngine.Object), "Destroy", parameters: new Type[] { typeof(UnityEngine.Object) })))
+			.SetOperandAndAdvance(
+				AccessTools.DeclaredMethod(typeof(ObjectPool), "ReleaseObject"))
+			.MatchForward(false,
+					new CodeMatch(OpCodes.Call, AccessTools.DeclaredMethod(typeof(UnityEngine.Object), "DestroyImmediate", parameters: new Type[] { typeof(UnityEngine.Object) })))
+			.SetOperandAndAdvance(
+				AccessTools.DeclaredMethod(typeof(ObjectPool), "ReleaseObject"))
+			.InstructionEnumeration();
+		
+		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into UnityUtil::Destroy");
+		return newInstructions;
+	}
+
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> FromProxyPoolingPatch(IEnumerable<CodeInstruction> instructions)
@@ -65,15 +94,19 @@ public class PoolingPatches
 		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into Dungeon::FromProxy");
 
 		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(false,
-					InstantiateMatcher)
+			.MatchForward(false, InstantiateMatcher)
 			.SetOperandAndAdvance(
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "InstantiateTransparently", parameters: new Type[] { typeof(GameObject), typeof(Transform) }))
 
-			.MatchForward(false,
-					InstantiateMatcher)
+			.MatchForward(false, InstantiateMatcher)
 			.SetOperandAndAdvance(
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "InstantiateTransparently", parameters: new Type[] { typeof(GameObject) }))
+
+			.Start()
+			.MatchForward(false,
+				new CodeMatch(OpCodes.Call, AccessTools.DeclaredMethod(typeof(UnityEngine.Object), "DestroyImmediate", parameters: new Type[] { typeof(UnityEngine.Object), typeof(bool) })))
+			.Repeat(matcher =>
+				matcher.SetOperandAndAdvance(AccessTools.DeclaredMethod(typeof(PoolingPatches), "DestroyImmediateTransparently")))
 
 			.InstructionEnumeration();
 		
@@ -81,20 +114,14 @@ public class PoolingPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "SpawnSyncedProps")]
-	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> SpawnSyncedPropsPoolingPatch(IEnumerable<CodeInstruction> instructions)
+	static void DestroyImmediateTransparently(UnityEngine.Object obj, bool allowDestroyingAssets)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into RoundManager::SpawnSyncedProps");
+		if (!obj.GetType().IsAssignableFrom(typeof(UnityEngine.GameObject)))
+		{
+			UnityEngine.Object.DestroyImmediate(obj, allowDestroyingAssets);
+			return;
+		}
 
-		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(false,
-					InstantiateMatcher)
-			.SetOperandAndAdvance(
-				AccessTools.DeclaredMethod(typeof(ObjectPool), "InstantiateTransparently", parameters: new Type[] { typeof(GameObject), typeof(Vector3), typeof(Quaternion), typeof(Transform) }))
-			.InstructionEnumeration();
-		
-		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into RoundManager::SpawnSyncedProps");
-		return newInstructions;
+		ObjectPool.ReleaseObject(obj as GameObject);
 	}
 }
