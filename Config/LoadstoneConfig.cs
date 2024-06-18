@@ -21,6 +21,8 @@ public static class LoadstoneConfig
 
 	public static ConfigEntry<bool> ObjectPooling;
 
+	public static ConfigEntry<bool> DunGenOptimizations;
+
 	public static ConfigEntry<bool> ShouldLoadingMusicPlay;
 	public static ConfigEntry<float> LoadingMusicFadeTime;
 	public static ConfigEntry<float> LoadingMusicVolume;
@@ -79,6 +81,13 @@ public static class LoadstoneConfig
 				true,
 				"Enables a fix for the game's status change callback, which is non-functional in vanilla. The vanilla value is false");
 		
+		// DunGen Optimizations
+		DunGenOptimizations = LoadstoneFile.Bind<bool>(
+				"DunGenOptimizations",
+				"Enabled",
+				true,
+				"Enables a number of optmizations for DunGen's dungeon generator");
+
 		// Object Pooling
 		ObjectPooling = LoadstoneFile.Bind<bool>(
 				"ObjectPooling",
