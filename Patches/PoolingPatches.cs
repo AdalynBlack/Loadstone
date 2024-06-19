@@ -1,3 +1,4 @@
+#if NIGHTLY
 using DunGen;
 using HarmonyLib;
 using Loadstone.Config;
@@ -129,3 +130,4 @@ public class PoolingPatches
 		ObjectPool.ReleaseObject(obj as GameObject);
 	}
 }
+#endif

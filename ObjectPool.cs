@@ -1,3 +1,4 @@
+#if NIGHTLY
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
@@ -95,3 +96,4 @@ public static class ObjectPool
 		inUseObjects.Clear();
 	}
 }
+#endif

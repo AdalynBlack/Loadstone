@@ -81,8 +81,10 @@ public class FromProxyPatches {
 
 			var codeList = matcher.InstructionsInRange(start, end).AsEnumerable();
 
+#if NIGHTLY
 			if (LoadstoneConfig.ObjectPooling.Value)
 				codeList = PoolingPatches.FromProxyPoolingPatch(codeList);
+#endif
 
 			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's first inner for loop");
 			return codeList;

@@ -18,6 +18,11 @@ public class RoundManagerMusicPatches
 	{
 		if (loadingAudioSource != null)
 			Object.Destroy(loadingAudioSource);
+		
+		if (loadingAudioClip.loadState != AudioDataLoadState.Loaded)
+		{
+			loadingAudioClip.LoadAudioData();
+		}
 
 		loadingAudioSource = Object.Instantiate(StartOfRound.Instance.speakerAudioSource);
 		loadingAudioSource.name = "LoadstoneLoading";

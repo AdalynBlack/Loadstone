@@ -1,14 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<Target Name="BranchTest" BeforeTargets="Build">
-		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
-			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
-		</Exec>
-
-		<PropertyGroup>
-			<Product Condition="'$(BranchName)'!='main'">$(Product)$(BranchName)</Product>
-		</PropertyGroup>
-	</Target>
-
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
@@ -24,6 +14,16 @@
 		<LaunchCommand Condition="$(OS) == Windows_NT">&quot;$(LC_PATH)\Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)\..\core\BepInEx.Preloader.dll&quot;</LaunchCommand>
 		<LaunchCommand Condition="$(OS) == UNIX">wine &quot;$(LC_PATH)/Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)/../core/BepInEx.Preloader.dll&quot; &amp;</LaunchCommand>
 	</PropertyGroup>
+
+	<Target Name="BranchTest" BeforeTargets="BeforeCompile">
+		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
+			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
+		</Exec>
+		<PropertyGroup Condition="'$(BranchName)'!='main'">
+			<Product>$(Product)$(BranchName)</Product>
+			<DefineConstants>NIGHTLY</DefineConstants>
+		</PropertyGroup>
+	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
