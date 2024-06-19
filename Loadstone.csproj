@@ -1,8 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<Target Name="BranchTest" BeforeTargets="Build">
+		<Exec Command="git symbolic-ref --short HEAD" ConsoleToMSBuild="True">
+			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
+		</Exec>
+		<PropertyGroup>
+			<Product Condition="'$(BranchName)'!='main'">$(BranchName)$(Product)</Product>
+		</PropertyGroup>
+	</Target>
+
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
-		<Product>LoadstoneNightly</Product>
+		<Product>Loadstone</Product>
 		<Description>Reduces stuttering during level loading</Description>
 		<Version>0.1.5</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
