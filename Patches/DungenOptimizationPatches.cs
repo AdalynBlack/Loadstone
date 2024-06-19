@@ -38,7 +38,7 @@ public class DungenOptimizationPatches
 		return false;
 	}
 
-	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary;
+	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>>();
 
 	// Extracts the original code for HasMatchingTagPair so we don't use the overridden code
 	[HarmonyPatch(typeof(DungeonFlow), "HasMatchingTagPair")]
@@ -78,32 +78,31 @@ public class DungenOptimizationPatches
 		return flowTagMatchDict;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "Awake")]
+	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
 	[HarmonyPrefix]
-	static void TileTagPrecalcPatch()
+	static void TileTagPrecalcPatch(DungeonGenerator __instance)
 	{
-		var flows = Resources.FindObjectsOfTypeAll<DungeonFlow>();
-		TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>>();
+		var flow = __instance.DungeonFlow;
 
-		foreach (var flow in flows)
+		if (TagMatchDictionary.ContainsKey(flow))
+			return;
+
+		HashSet<Tile> tiles = new HashSet<Tile>();
+
+		foreach (var node in flow.Nodes)
 		{
-			HashSet<Tile> tiles = new HashSet<Tile>();
-
-			foreach (var node in flow.Nodes)
-			{
-				GenerateTileHashSet(ref tiles, node.TileSets);
-			}
-
-			foreach (var line in flow.Lines)
-			{
-				foreach (var archetype in line.DungeonArchetypes)
-				{
-					GenerateTileHashSet(ref tiles, archetype.TileSets);
-					GenerateTileHashSet(ref tiles, archetype.BranchCapTileSets);
-				}
-			}
-
-			TagMatchDictionary.Add(flow, TileConnectionTagOptimization(tiles, flow));
+			GenerateTileHashSet(ref tiles, node.TileSets);
 		}
+
+		foreach (var line in flow.Lines)
+		{
+			foreach (var archetype in line.DungeonArchetypes)
+			{
+				GenerateTileHashSet(ref tiles, archetype.TileSets);
+				GenerateTileHashSet(ref tiles, archetype.BranchCapTileSets);
+			}
+		}
+
+		TagMatchDictionary.Add(flow, TileConnectionTagOptimization(tiles, flow));
 	}
 }
