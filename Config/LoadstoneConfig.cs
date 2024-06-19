@@ -19,7 +19,9 @@ public static class LoadstoneConfig
 
 	public static ConfigEntry<bool> StatusChangeFix;
 
+#if NIGHTLY
 	public static ConfigEntry<bool> ObjectPooling;
+#endif
 
 	public static ConfigEntry<bool> DunGenOptimizations;
 
@@ -88,12 +90,14 @@ public static class LoadstoneConfig
 				true,
 				"Enables a number of optmizations for DunGen's dungeon generator");
 
+#if NIGHTLY
 		// Object Pooling
 		ObjectPooling = LoadstoneFile.Bind<bool>(
 				"ObjectPooling",
 				"Enabled",
 				false,
 				"!!! EXPERIMENTAL FEATURE !!!\nEnables object pooling for dungeon spawning and certain parts of initial level generation. This can greatly improve load times, but may increase ram usage in modpacks with many custom interiors. This feature is currently very experimental. The vanilla value is false");
+#endif
 
 		// LCSoundTool
 		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(

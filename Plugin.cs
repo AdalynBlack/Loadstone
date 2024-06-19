@@ -53,8 +53,11 @@ public class Loadstone : BaseUnityPlugin
 		ConflictResolver.TryPatch(typeof(ScreenDarkenPatches));
 		ConflictResolver.TryPatch(typeof(ObjectFindPatches));
 
+#if NIGHTLY
 		if (LoadstoneConfig.ObjectPooling.Value)
 			ConflictResolver.TryPatch(typeof(PoolingPatches));
+#endif
+
 		if (LoadstoneConfig.DunGenOptimizations.Value)
 			ConflictResolver.TryPatch(typeof(DungenOptimizationPatches));
 
