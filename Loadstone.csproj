@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<Target Name="BranchTest" BeforeTargets="Build">
-		<Exec Command="git symbolic-ref --short HEAD" ConsoleToMSBuild="True">
+		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
 			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
 		</Exec>
+
 		<PropertyGroup>
-			<Product Condition="'$(BranchName)'!='main'">$(BranchName)$(Product)</Product>
+			<Product Condition="'$(BranchName)'!='main'">$(Product)$(BranchName)</Product>
 		</PropertyGroup>
 	</Target>
 
