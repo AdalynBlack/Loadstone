@@ -1,6 +1,16 @@
 ## v0.1.5
+- Ported many features from nightly to main!
+  - Code reorganization
+    - Introduces modules internally, which reflects newly added toggles to disable modules if needed
+  - Improved Navmesh Async Generation
+    - The dungeon itself will now generate its navmesh asynchronously
+  - Removed inefficient object searches from LC's code
+  - Added the DunGen optimization module, which contains new optimizations to improve DunGen's performance
+- Nightly only features
+  - Object pooling still remains nightly only due to a number of bugs
 - Improved DunGen Optimization Module compatibility
   - Should fix issues with SDM and other modded interiors
+- Waiting music will now load as soon as you join a ship, rather than during level generation, so as to be less intrusive
 
 ## v0.1.4
 - The Dungeon Realization module now works with Object Pooling
