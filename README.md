@@ -46,3 +46,6 @@ All config options can be modified in-game without restarting through LethalConf
     - Determines how long it will take for the music to fully fade out once the level finishes loading. The default value of 15 seconds is intended to make the music fade out the moment you land on the ground
   - Loading Music Volume
     - How loud the loading music should be
+
+#### Other
+If you've read this far and this mod has been helpful to you, I'd like to ask you to consider donating. Keeping this mod up to date and making improvements takes a lot of time, and any support will help ensure I can keep supporting the mod into the future. My ko-fi can be found [here](https://ko-fi.com/adalyn) if you would like to donate
