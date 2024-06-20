@@ -1,3 +1,10 @@
+## v0.1.7
+- Fixed the issues from v0.1.5. The dungeon should now generate identically between modded and unmodded clients
+- Updated main to v0.1.7
+
+## v0.1.6
+- Downgraded main branch to 0.0.9 due to unexpected issues
+
 ## v0.1.5
 - Ported many features from nightly to main!
   - Code reorganization
