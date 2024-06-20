@@ -15,7 +15,7 @@ public class DungenOptimizationPatches
 	[HarmonyPrefix]
 	static bool HasMatchingTagPairEarlyOut(DungeonFlow __instance, Tile tileA, Tile tileB, ref bool __result)
 	{
-		if (tileA.Tags.Tags.Count != 0 && tileB.Tags.Tags.Count != 0)
+		if (tileA.Tags.Tags.Count == 0 || tileB.Tags.Tags.Count == 0)
 		{
 			__result = false;
 			return false;
