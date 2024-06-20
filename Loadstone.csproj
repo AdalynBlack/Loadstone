@@ -15,7 +15,7 @@
 		<LaunchCommand Condition="$(OS) == UNIX">wine &quot;$(LC_PATH)/Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)/../core/BepInEx.Preloader.dll&quot; &amp;</LaunchCommand>
 	</PropertyGroup>
 
-	<Target Name="BranchTest" BeforeTargets="BeforeCompile">
+	<Target Name="BranchTest" BeforeTargets="AddGeneratedFile">
 		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
 			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
 		</Exec>
