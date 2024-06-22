@@ -18,6 +18,9 @@ public class RoundManagerMusicPatches
 	{
 		if (loadingAudioSource != null)
 			Object.Destroy(loadingAudioSource);
+
+		if (loadingAudioClip == null)
+			return;
 		
 		if (loadingAudioClip.loadState != AudioDataLoadState.Loaded)
 		{

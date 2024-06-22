@@ -4,7 +4,7 @@
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
 		<Product>Loadstone</Product>
 		<Description>Reduces stuttering during level loading</Description>
-		<Version>0.1.7</Version>
+		<Version>0.1.8</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 
@@ -15,7 +15,7 @@
 		<LaunchCommand Condition="$(OS) == UNIX">wine &quot;$(LC_PATH)/Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)/../core/BepInEx.Preloader.dll&quot; &amp;</LaunchCommand>
 	</PropertyGroup>
 
-	<Target Name="BranchTest" BeforeTargets="BeforeCompile">
+	<Target Name="BranchTest" BeforeTargets="AddGeneratedFile">
 		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
 			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
 		</Exec>

@@ -1,3 +1,7 @@
+
+## v0.1.8
+- Fixed Nightly using the wrong audio file path
+
 ## v0.1.7
 - Fixed the issues from v0.1.5. The dungeon should now generate identically between modded and unmodded clients
 - Updated main to v0.1.7
