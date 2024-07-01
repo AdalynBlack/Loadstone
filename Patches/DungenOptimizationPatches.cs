@@ -22,22 +22,28 @@ public class DungenOptimizationPatches
 		}
 
 		try {
-			__result = TagMatchDictionary[__instance][tileA][tileB];
+			__result = DungeonTagMatchTemp[tileA][tileB];
 		} catch (KeyNotFoundException e) {
 			Loadstone.HarmonyLog.LogError($"A tile was not found in the tile tag cache, and is now being cached: {e}");
 
-			if (!TagMatchDictionary[__instance].ContainsKey(tileA))
-				TagMatchDictionary[__instance][tileA] = new Dictionary<Tile, bool>();
-			if (!TagMatchDictionary[__instance].ContainsKey(tileB))
-				TagMatchDictionary[__instance][tileB] = new Dictionary<Tile, bool>();
+			if (!TagMatchDictionary.ContainsKey(__instance))
+			{
+				TagMatchDictionary[__instance] = new Dictionary<Tile, Dictionary<Tile, bool>>();
+				DungeonTagMatchTemp = TagMatchDictionary[__instance];
+			}
+			if (!DungeonTagMatchTemp.ContainsKey(tileA))
+				DungeonTagMatchTemp[tileA] = new Dictionary<Tile, bool>();
+			if (!DungeonTagMatchTemp.ContainsKey(tileB))
+				DungeonTagMatchTemp[tileB] = new Dictionary<Tile, bool>();
 
-			TagMatchDictionary[__instance][tileA][tileB] = HasMatchingTagPairOriginal(__instance, tileA, tileB);
-			TagMatchDictionary[__instance][tileB][tileA] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
+			DungeonTagMatchTemp[tileA][tileB] = HasMatchingTagPairOriginal(__instance, tileA, tileB);
+			DungeonTagMatchTemp[tileB][tileA] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
 		}
 
 		return false;
 	}
 
+	internal static DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>> DungeonTagMatchTemp = null;
 	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>>();
 
 	// Extracts the original code for HasMatchingTagPair so we don't use the overridden code
@@ -104,5 +110,6 @@ public class DungenOptimizationPatches
 		}
 
 		TagMatchDictionary.Add(flow, TileConnectionTagOptimization(tiles, flow));
+		DungeonTagMatchTemp = TagMatchDictionary[flow];
 	}
 }
