@@ -63,6 +63,8 @@ public class Loadstone : BaseUnityPlugin
 		if (LoadstoneConfig.DunGenOptimizations.Value)
 			ConflictResolver.TryPatch(typeof(DungenOptimizationPatches));
 
+		ConflictResolver.TryPatch(typeof(PerformanceReportPatches));
+
 		CheckModded();
 
 		CurrentLog = HarmonyLog;
