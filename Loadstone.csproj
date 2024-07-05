@@ -11,7 +11,7 @@
 		<ThunderDeps>["BepInEx-BepInExPack-5.4.2100"]</ThunderDeps>
 		<ThunderURL>https://github.com/AdalynBlack/Loadstone</ThunderURL>
 
-		<LaunchCommand Condition="$(OS) == Windows_NT">&quot;$(LC_PATH)\Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)\..\core\BepInEx.Preloader.dll&quot;</LaunchCommand>
+		<LaunchCommand Condition="$(OS) == Windows_NT">&quot;$(LC_PATH)/Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)/../core/BepInEx.Preloader.dll&quot;</LaunchCommand>
 		<LaunchCommand Condition="$(OS) == UNIX">wine &quot;$(LC_PATH)/Lethal Company.exe&quot; --doorstop-enable true --doorstop-target &quot;$(PROFILE_PATH)/../core/BepInEx.Preloader.dll&quot; &amp;</LaunchCommand>
 	</PropertyGroup>
 
@@ -34,37 +34,37 @@
 
 	<ItemGroup>
 		<Reference Include="UnityEngine.Netcode.Runtime">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\Unity.Netcode.Runtime.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Unity.Netcode.Runtime.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.CoreModule">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
 		<Reference Include="Unity.AI.Navigation">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\Unity.AI.Navigation.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Unity.AI.Navigation.dll</HintPath>
 		</Reference>
 		<Reference Include="Unity.TextMeshPro">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Unity.TextMeshPro.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.AIModule">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/UnityEngine.AIModule.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine.UI">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/UnityEngine.UI.dll</HintPath>
 		</Reference>
 		<Reference Include="Assembly-CSharp" Publicize="true">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Assembly-CSharp.dll</HintPath>
 		</Reference>
 		<Reference Include="Assembly-CSharp-firstpass">
-			<HintPath>$(LC_PATH)\Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Assembly-CSharp-firstpass.dll</HintPath>
 		</Reference>
 		<Reference Include="LethalConfig">
-			<HintPath>.\Deps\Soft\LethalConfig.dll</HintPath>
+			<HintPath>./Deps/Soft/LethalConfig.dll</HintPath>
 		</Reference>
 		<Reference Include="LC_SoundTool">
-			<HintPath>.\Deps\Soft\LC_SoundTool.dll</HintPath>
+			<HintPath>./Deps/Soft/LC_SoundTool.dll</HintPath>
 		</Reference>
 		<Reference Include="LethalExpansionCore">
-			<HintPath>.\Deps\Soft\LethalExpansionCore.dll</HintPath>
+			<HintPath>./Deps/Soft/LethalExpansionCore.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
@@ -88,7 +88,7 @@
 
 	<Target Name="AddToProfile" AfterTargets="Build">
 		<Message Text="Copying Compiled Mod $(Product) to Profile Plugins Folder" Importance="High"/>
-		<Exec Command="unzip -o $(Product)Thunderstore.zip -d &quot;$(PROFILE_PATH)\AdiBTW-$(Product)&quot;"/>
+		<Exec Command="unzip -o $(Product)Thunderstore.zip -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
 	</Target>
 
 	<Target Name="LaunchProfile" AfterTargets="AddToProfile" Condition="'$(Configuration)' == 'Launch'">

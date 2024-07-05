@@ -19,16 +19,18 @@ namespace Loadstone;
 [BepInDependency("LCSoundTool", BepInDependency.DependencyFlags.SoftDependency)]
 public class Loadstone : BaseUnityPlugin
 {
-	internal static ManualLogSource HarmonyLog;
-	internal static ManualLogSource TranspilerLog;
+	private static ManualLogSource CurrentLog;
+	private static ManualLogSource HarmonyLog;
+	private static ManualLogSource TranspilerLog;
 
 	private void Awake()
 	{
 		Logger.LogDebug("Loading Loadstone...");
 
 		// I prepended spaces because I hate having it right next to the colon in logs lol
-		HarmonyLog = BepInEx.Logging.Logger.CreateLogSource($" {PluginInfo.PLUGIN_NAME}(Harmony)");
+	 	HarmonyLog = BepInEx.Logging.Logger.CreateLogSource($" {PluginInfo.PLUGIN_NAME}(Harmony)");
 		TranspilerLog = BepInEx.Logging.Logger.CreateLogSource($" {PluginInfo.PLUGIN_NAME}(Transpiler)");
+		CurrentLog = TranspilerLog;
 
 		Logger.LogDebug("Loading Configs...");
 		LoadstoneConfig.BindAllTo(Config);
@@ -63,6 +65,7 @@ public class Loadstone : BaseUnityPlugin
 
 		CheckModded();
 
+		CurrentLog = HarmonyLog;
 		Logger.LogInfo("Plugin Loadstone is loaded!");
 	}
 
@@ -105,6 +108,41 @@ public class Loadstone : BaseUnityPlugin
 		Logger.LogDebug("Patching with LCSoundTool");
 
 		ConflictResolver.TryPatch(typeof(RoundManagerMusicPatches));
+	}
+
+	internal static void Log(LogLevel level, object data)
+	{
+		CurrentLog.Log(level, data);
+	}
+
+	internal static void LogDebug(object data)
+	{
+		CurrentLog.LogDebug(data);
+	}
+
+	internal static void LogError(object data)
+	{
+		CurrentLog.LogError(data);
+	}
+
+	internal static void LogFatal(object data)
+	{
+		CurrentLog.LogFatal(data);
+	}
+
+	internal static void LogInfo(object data)
+	{
+		CurrentLog.LogInfo(data);
+	}
+
+	internal static void LogMessage(object data)
+	{
+		CurrentLog.LogMessage(data);
+	}
+
+	internal static void LogWarning(object data)
+	{
+		CurrentLog.LogWarning(data);
 	}
 }
 

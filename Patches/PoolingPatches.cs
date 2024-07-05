@@ -24,7 +24,7 @@ public class PoolingPatches
 	static void GenerateHijack(DungeonGenerator __instance)
 	{
 		var genStats = __instance.GenerationStats;
-		Loadstone.HarmonyLog.LogDebug($"DunGen Stats:\nPre-process Time: {genStats.PreProcessTime}\nMain Path Generation Time: {genStats.MainPathGenerationTime}\nBranch Path Generation Time: {genStats.BranchPathGenerationTime}\nPost-process Time: {genStats.PostProcessTime}\nTotal Time: {genStats.TotalTime}");
+		Loadstone.LogDebug($"DunGen Stats:\nPre-process Time: {genStats.PreProcessTime}\nMain Path Generation Time: {genStats.MainPathGenerationTime}\nBranch Path Generation Time: {genStats.BranchPathGenerationTime}\nPost-process Time: {genStats.PostProcessTime}\nTotal Time: {genStats.TotalTime}");
 	}
 
 	[HarmonyPatch(typeof(RoundManager), "UnloadSceneObjectsEarly")]
@@ -39,7 +39,7 @@ public class PoolingPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> AddTilePoolingPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into DungeonProxy::AddTile");
+		Loadstone.LogDebug("Attempting to inject pooling patches into DungeonProxy::AddTile");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false, InstantiateMatcher)
@@ -47,7 +47,7 @@ public class PoolingPatches
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "InstantiateTransparently", parameters: new Type[] { typeof(GameObject), typeof(Transform) }))
 			.InstructionEnumeration();
 		
-		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into DungeonProxy::AddTile");
+		Loadstone.LogDebug("Validating injected pooling patches into DungeonProxy::AddTile");
 		return newInstructions;
 	}
 	
@@ -56,7 +56,7 @@ public class PoolingPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> RemoveTilePoolingPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into DungeonProxy::RemoveTile");
+		Loadstone.LogDebug("Attempting to inject pooling patches into DungeonProxy::RemoveTile");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -65,7 +65,7 @@ public class PoolingPatches
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "ReleaseObject"))
 			.InstructionEnumeration();
 		
-		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into DungeonProxy::RemoveTile");
+		Loadstone.LogDebug("Validating injected pooling patches into DungeonProxy::RemoveTile");
 		return newInstructions;
 	}
 
@@ -74,7 +74,7 @@ public class PoolingPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> DestroyPoolingPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into UnityUtil::Destroy");
+		Loadstone.LogDebug("Attempting to inject pooling patches into UnityUtil::Destroy");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -87,7 +87,7 @@ public class PoolingPatches
 				AccessTools.DeclaredMethod(typeof(ObjectPool), "ReleaseObject"))
 			.InstructionEnumeration();
 		
-		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into UnityUtil::Destroy");
+		Loadstone.LogDebug("Validating injected pooling patches into UnityUtil::Destroy");
 		return newInstructions;
 	}
 
@@ -96,7 +96,7 @@ public class PoolingPatches
 	[HarmonyTranspiler]
 	public static IEnumerable<CodeInstruction> FromProxyPoolingPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to inject pooling patches into Dungeon::FromProxy");
+		Loadstone.LogDebug("Attempting to inject pooling patches into Dungeon::FromProxy");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false, InstantiateMatcher)
@@ -115,7 +115,7 @@ public class PoolingPatches
 
 			.InstructionEnumeration();
 		
-		Loadstone.TranspilerLog.LogDebug("Validating injected pooling patches into Dungeon::FromProxy");
+		Loadstone.LogDebug("Validating injected pooling patches into Dungeon::FromProxy");
 		return newInstructions;
 	}
 

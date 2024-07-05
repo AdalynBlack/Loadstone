@@ -11,7 +11,7 @@ public class StatusChangedFixer
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> StatusChangedPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
 	{
-		Loadstone.TranspilerLog.LogDebug("Attempting to fix Generator_OnGenerationStatusChanged");
+		Loadstone.LogDebug("Attempting to fix Generator_OnGenerationStatusChanged");
 
 		var newInstructions = new CodeMatcher(instructions, ilGenerator)
 			.MatchForward(false,

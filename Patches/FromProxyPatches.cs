@@ -48,7 +48,7 @@ public class FromProxyPatches {
 	static void FromProxyIteration(Dungeon __instance, Dictionary<TileProxy, Tile> dictionary, DungeonGenerator generator, TileProxy tile) {
 		IEnumerable<CodeInstruction> StartTranspiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
 		{
-			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's first inner for loop");
+			Loadstone.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's first inner for loop");
 			var matcher = new CodeMatcher(instructions, generator);
 
 			var start = matcher
@@ -86,7 +86,7 @@ public class FromProxyPatches {
 				codeList = PoolingPatches.FromProxyPoolingPatch(codeList);
 #endif
 
-			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's first inner for loop");
+			Loadstone.LogDebug("Validating reverse-patched Dungeon::FromProxy's first inner for loop");
 			return codeList;
 		}
 
@@ -100,7 +100,7 @@ public class FromProxyPatches {
 	static void FromProxyEnd(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator, Dictionary<TileProxy, Tile> dictionary) {
 		IEnumerable<CodeInstruction> EndTranspiler(IEnumerable<CodeInstruction> instructions)
 		{
-			Loadstone.TranspilerLog.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's final code");
+			Loadstone.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's final code");
 			var matcher = new CodeMatcher(instructions);
 
 			var start = matcher
@@ -122,7 +122,7 @@ public class FromProxyPatches {
 
 			var codeList = matcher.InstructionsInRange(start, end);
 
-			Loadstone.TranspilerLog.LogDebug("Validating reverse-patched Dungeon::FromProxy's final code");
+			Loadstone.LogDebug("Validating reverse-patched Dungeon::FromProxy's final code");
 			return codeList.AsEnumerable();
 		}
 
@@ -135,7 +135,7 @@ public class FromProxyPatches {
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> PostProcessPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to inject async check into DungeonGenerator::PostProcess");
+		Loadstone.LogDebug($"Attempting to inject async check into DungeonGenerator::PostProcess");
 		Type[] findWaitParams = { typeof(Func<bool>) };
 		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
 
@@ -151,7 +151,7 @@ public class FromProxyPatches {
 					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
 			.InstructionEnumeration();
 		
-		Loadstone.TranspilerLog.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
+		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
 		return newInstructions;
 	}
 

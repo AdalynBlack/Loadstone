@@ -18,7 +18,7 @@ public class NavmeshPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> SpawnOutsideHazardsPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Writing SpawnOutsideHazards Transpiler");
+		Loadstone.LogDebug("Writing SpawnOutsideHazards Transpiler");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -37,7 +37,7 @@ public class NavmeshPatches
 					parameters: new Type[] {typeof(NavMeshSurface), typeof(RoundManager)}))
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug("Verifying SpawnOutsideHazards Transpiler");
+		Loadstone.LogDebug("Verifying SpawnOutsideHazards Transpiler");
 		return newInstructions;
 	}
 
@@ -46,7 +46,7 @@ public class NavmeshPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> BakeFullDungeonPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug("Writing UnityNavMeshAdapter Transpiler");
+		Loadstone.LogDebug("Writing UnityNavMeshAdapter Transpiler");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -58,7 +58,7 @@ public class NavmeshPatches
 						AccessTools.DeclaredMethod(typeof(NavmeshPatches), "GenerateNavMeshAsync")))
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug("Verifying UnityNavMeshAdapter Transpiler");
+		Loadstone.LogDebug("Verifying UnityNavMeshAdapter Transpiler");
 		return newInstructions;
 	}
 
@@ -75,7 +75,7 @@ public class NavmeshPatches
 				.Invoke(navMeshSurface, new object[] {sources});
 		}
 						
-		Loadstone.HarmonyLog.LogDebug($"Updating navmesh with {sources.Count} obstacles");
+		Loadstone.LogDebug($"Updating navmesh with {sources.Count} obstacles");
 
 		var buildSettings = navMeshSurface.GetBuildSettings();
 		//buildSettings.tileSize = 64;
@@ -110,6 +110,6 @@ public class NavmeshPatches
 		navMeshSurface.RemoveData();
 		navMeshSurface.AddData();
 
-		Loadstone.HarmonyLog.LogDebug("Updated navmesh");
+		Loadstone.LogDebug("Updated navmesh");
 	}
 }
