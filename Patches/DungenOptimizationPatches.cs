@@ -43,7 +43,7 @@ public class DungenOptimizationPatches
 		return false;
 	}
 
-	internal static DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>> DungeonTagMatchTemp = null;
+	internal static Dictionary<Tile, Dictionary<Tile, bool>> DungeonTagMatchTemp = null;
 	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>>();
 
 	// Extracts the original code for HasMatchingTagPair so we don't use the overridden code
