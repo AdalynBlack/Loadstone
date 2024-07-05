@@ -14,9 +14,9 @@ public class ObjectFindPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> InteractTriggerPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to replace InteractTrigger's StartOfRound finding function");
+		Loadstone.LogDebug($"Attempting to replace InteractTrigger's StartOfRound finding function");
 		var newInstructions = StartOfRoundFixer(instructions);
-		Loadstone.TranspilerLog.LogDebug($"Verifying InteractTrigger's replaced StartOfRound finding function");
+		Loadstone.LogDebug($"Verifying InteractTrigger's replaced StartOfRound finding function");
 		return newInstructions;
 	}
 
@@ -24,9 +24,9 @@ public class ObjectFindPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> OutOfBoundsTriggerPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to replace OutOfBoundsTrigger's StartOfRound finding function");
+		Loadstone.LogDebug($"Attempting to replace OutOfBoundsTrigger's StartOfRound finding function");
 		var newInstructions = StartOfRoundFixer(instructions);
-		Loadstone.TranspilerLog.LogDebug($"Verifying OutOfBoundsTrigger's replaced StartOfRound finding function");
+		Loadstone.LogDebug($"Verifying OutOfBoundsTrigger's replaced StartOfRound finding function");
 		return newInstructions;
 	}
 
@@ -34,9 +34,9 @@ public class ObjectFindPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> FoliageDetailDistancePatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to replace FoliageDetailDistance's StartOfRound finding function");
+		Loadstone.LogDebug($"Attempting to replace FoliageDetailDistance's StartOfRound finding function");
 		var newInstructions = StartOfRoundFixer(instructions);
-		Loadstone.TranspilerLog.LogDebug($"Verifying FoliageDetailDistance's replaced StartOfRound finding function");
+		Loadstone.LogDebug($"Verifying FoliageDetailDistance's replaced StartOfRound finding function");
 		return newInstructions;
 	}
 
@@ -44,9 +44,9 @@ public class ObjectFindPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> ItemDropshipPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to replace ItemDropship's StartOfRound finding function");
+		Loadstone.LogDebug($"Attempting to replace ItemDropship's StartOfRound finding function");
 		var newInstructions = StartOfRoundFixer(instructions);
-		Loadstone.TranspilerLog.LogDebug($"Verifying ItemDropship's replaced StartOfRound finding function");
+		Loadstone.LogDebug($"Verifying ItemDropship's replaced StartOfRound finding function");
 		return newInstructions;
 	}
 
@@ -54,9 +54,9 @@ public class ObjectFindPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> animatedSunPatch(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to replace animatedSun's TImeOfDay finding function");
+		Loadstone.LogDebug($"Attempting to replace animatedSun's TImeOfDay finding function");
 		var newInstructions = InstanceFixer(instructions, typeof(TimeOfDay));
-		Loadstone.TranspilerLog.LogDebug($"Verifying animatedSun's replaced TImeOfDay finding function");
+		Loadstone.LogDebug($"Verifying animatedSun's replaced TImeOfDay finding function");
 		return newInstructions;
 	}
 

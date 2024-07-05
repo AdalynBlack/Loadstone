@@ -63,6 +63,6 @@ public class RoundManagerMusicPatches
 		source.Stop();
 		source.volume = originalVolume;
 
-		Loadstone.HarmonyLog.LogDebug("Music fully faded and stopped");
+		Loadstone.LogDebug("Music fully faded and stopped");
 	}
 }

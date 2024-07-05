@@ -81,7 +81,7 @@ public static class ObjectPool
 		{
 			if (toRelease == null)
 			{
-				Loadstone.HarmonyLog.LogDebug($"A pooled object for {inUseObjects[toRelease].name} being mass released was null!");
+				Loadstone.LogDebug($"A pooled object for {inUseObjects[toRelease].name} being mass released was null!");
 				continue;
 			}
 

@@ -16,7 +16,7 @@ public class AsyncDungeonPatches
 	[HarmonyTranspiler]
 	static IEnumerable<CodeInstruction> ShouldSkipFrameTranspiler(IEnumerable<CodeInstruction> instructions)
 	{
-		Loadstone.TranspilerLog.LogDebug($"Attempting to inject modified frame skip transpiler into DungeonGenerator::ShouldSkipFrame");
+		Loadstone.LogDebug($"Attempting to inject modified frame skip transpiler into DungeonGenerator::ShouldSkipFrame");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.Start()
@@ -33,7 +33,7 @@ public class AsyncDungeonPatches
 					AccessTools.DeclaredMethod(typeof(Stopwatch), "Reset"))
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Validating injected frame skip transpiler into DungeonGenerator::ShouldSkipFrame");
+		Loadstone.LogDebug($"Validating injected frame skip transpiler into DungeonGenerator::ShouldSkipFrame");
 		return newInstructions;
 	}
 

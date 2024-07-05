@@ -15,7 +15,7 @@ public class ScreenDarkenPatches
 		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
 			return instructions;
 
-		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
+		Loadstone.LogDebug($"Attempting to disable screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -24,7 +24,7 @@ public class ScreenDarkenPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
+		Loadstone.LogDebug($"Validating disabled screen overlay on scene load in \"RoundManager::GenerateNewLevelClientRpc\"");
 		return newInstructions;
 	}
 
@@ -32,7 +32,7 @@ public class ScreenDarkenPatches
 	[HarmonyPostfix]
 	static void GenerateNewLevelClientRpcPrefixPath(int randomSeed)
 	{
-		Loadstone.HarmonyLog.LogInfo($"Random seed: {randomSeed}");
+		Loadstone.LogInfo($"Random seed: {randomSeed}");
 
 		if (LoadstoneConfig.SeedDisplayConfig.Value != LoadstoneConfig.SeedDisplayType.Popup)
 			return;
@@ -48,7 +48,7 @@ public class ScreenDarkenPatches
 		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
 			return instructions;
 
-		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
+		Loadstone.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -61,7 +61,7 @@ public class ScreenDarkenPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
+		Loadstone.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoadComplete1\"");
 		return newInstructions;
 	}
 
@@ -73,7 +73,7 @@ public class ScreenDarkenPatches
 		if (LoadstoneConfig.SeedDisplayConfig.Value == LoadstoneConfig.SeedDisplayType.Darken)
 			return instructions;
 
-		Loadstone.TranspilerLog.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
+		Loadstone.LogDebug($"Attempting to disable screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
 
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
@@ -82,7 +82,7 @@ public class ScreenDarkenPatches
 			.SetOpcodeAndAdvance(OpCodes.Ldc_I4_0)
 			.InstructionEnumeration();
 
-		Loadstone.TranspilerLog.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
+		Loadstone.LogDebug($"Validating disabled screen overlay on scene load in \"StartOfRound::SceneManager_OnLoad\"");
 		return newInstructions;
 	}
 }
