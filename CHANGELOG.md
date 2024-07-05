@@ -1,3 +1,8 @@
+## v0.1.9
+- Modified how logging is done internally to improve consistency
+- Added a slight optimization to tag caching
+- Added performance report logging
+  - This will be output into the bepinex log file. If you're having performance issues, please send the performance report data, or the log as a whole to help me learn where the issues are coming from
 
 ## v0.1.8
 - Fixed Nightly using the wrong audio file path
