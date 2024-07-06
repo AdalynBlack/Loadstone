@@ -1,3 +1,6 @@
+## v0.1.10
+- Fixed an Incompatibility with HarmonyXTranspilerFix
+
 ## v0.1.9
 - Modified how logging is done internally to improve consistency
 - Added a slight optimization to tag caching
