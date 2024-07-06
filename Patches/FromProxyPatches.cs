@@ -72,11 +72,13 @@ public class FromProxyPatches {
 				.Insert(new CodeInstruction(OpCodes.Ret))
 				.Pos;
 
-			matcher.Advance(-1).CreateLabel(out Label endLabel);
+			matcher.CreateLabel(out Label endLabel);
 
 			matcher
 				.MatchBack(false,
+					new CodeMatch(OpCodes.Brtrue),
 					new CodeMatch(OpCodes.Leave))
+				.Advance(1)
 				.SetOperandAndAdvance(endLabel);
 
 			var codeList = matcher.InstructionsInRange(start, end).AsEnumerable();
