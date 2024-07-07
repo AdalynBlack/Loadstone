@@ -32,20 +32,27 @@ public class PerformanceReportPatches
 		FinishGeneratingLevelCalledAt = timer.Elapsed.TotalMilliseconds;
 		timer.Stop();
 
-		var genStats = CurrentGenerator.GenerationStats;
+		GenerationStats genStats = null;
+		if (CurrentGenerator != null)
+			genStats = CurrentGenerator.GenerationStats;
 
 		Loadstone.LogInfo("Level Loading Stats:");
-		Loadstone.LogInfo("  DunGen");
-		Loadstone.LogInfo($"    MainPathRoomCount: {genStats.MainPathRoomCount}");
-		Loadstone.LogInfo($"    BranchPathRoomCount: {genStats.BranchPathRoomCount}");
-		Loadstone.LogInfo($"    MaxBranchDepth: {genStats.MaxBranchDepth}");
-		Loadstone.LogInfo($"    TotalRetries: {genStats.TotalRetries}");
-		Loadstone.LogInfo($"    PrunedBranchTileCount: {genStats.PrunedBranchTileCount}");
-		Loadstone.LogInfo($"    PreProcessTime: {genStats.PreProcessTime/1000} seconds");
-		Loadstone.LogInfo($"    MainPathGenerationTime: {genStats.MainPathGenerationTime/1000} seconds");
-		Loadstone.LogInfo($"    BranchPathGenerationTime: {genStats.BranchPathGenerationTime/1000} seconds");
-		Loadstone.LogInfo($"    PostProcessTime: {genStats.PostProcessTime/1000} seconds");
-		Loadstone.LogInfo($"    TotalTime: {genStats.TotalTime/1000} seconds");
+		if (genStats != null)
+		{
+			Loadstone.LogInfo("  DunGen");
+			Loadstone.LogInfo($"    MainPathRoomCount: {genStats.MainPathRoomCount}");
+			Loadstone.LogInfo($"    BranchPathRoomCount: {genStats.BranchPathRoomCount}");
+			Loadstone.LogInfo($"    MaxBranchDepth: {genStats.MaxBranchDepth}");
+			Loadstone.LogInfo($"    TotalRetries: {genStats.TotalRetries}");
+			Loadstone.LogInfo($"    PrunedBranchTileCount: {genStats.PrunedBranchTileCount}");
+			Loadstone.LogInfo($"    PreProcessTime: {genStats.PreProcessTime/1000} seconds");
+			Loadstone.LogInfo($"    MainPathGenerationTime: {genStats.MainPathGenerationTime/1000} seconds");
+			Loadstone.LogInfo($"    BranchPathGenerationTime: {genStats.BranchPathGenerationTime/1000} seconds");
+			Loadstone.LogInfo($"    PostProcessTime: {genStats.PostProcessTime/1000} seconds");
+			Loadstone.LogInfo($"    TotalTime: {genStats.TotalTime/1000} seconds");
+		}
+		else
+			Loadstone.LogInfo("  No DunGen timing stats present");
 		Loadstone.LogInfo($"  Started Waiting for Others' Dungeons to Finish after {DungeonWaitStartedAt/1000.0} seconds");
 		Loadstone.LogInfo($"  Finished Waiting for Others' Dungeons to Finish after {DungeonWaitEndedAt/1000.0} seconds");
 		Loadstone.LogInfo($"  Total generation time took {FinishGeneratingLevelCalledAt/1000.0} seconds");
