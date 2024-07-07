@@ -41,6 +41,12 @@ public class AsyncDungeonPatches
 	[HarmonyPrefix]
 	static void GenerateNewFloorPatch(RoundManager __instance)
 	{
+		if (__instance.dungeonGenerator == null)
+		{
+			Loadstone.LogWarning("Runtime dungeon was null, not forcing Async dungeon for this landing");
+			return;
+		}
+
 		__instance.dungeonGenerator.Generator.GenerateAsynchronously = LoadstoneConfig.AsyncDungeon.Value;
 		__instance.dungeonGenerator.Generator.PauseBetweenRooms = 0f;
 		__instance.dungeonGenerator.Generator.MaxAsyncFrameMilliseconds = LoadstoneConfig.DungeonAsyncMaxTime.Value;
