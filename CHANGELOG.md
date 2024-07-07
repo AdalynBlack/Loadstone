@@ -1,3 +1,11 @@
+- Ported many new features from v0.1.8-v0.1.12 to the main branch
+  - Improvements to the internal codebase
+  - Improvements to the DunGenOptimizations module
+    - Reduced unnecessary indexing for tag caching
+  - Added performance report logging
+    - This feature is off by default
+- Made performance stats module toggleable
+
 ## v0.1.11
 - Fixed a Null Reference Exception with the new performance stats module
 

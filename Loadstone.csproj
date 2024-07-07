@@ -4,7 +4,7 @@
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
 		<Product>Loadstone</Product>
 		<Description>Reduces stuttering during level loading</Description>
-		<Version>0.1.11</Version>
+		<Version>0.1.12</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 

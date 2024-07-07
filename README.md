@@ -39,6 +39,8 @@ All config options can be modified in-game without restarting through LethalConf
 - Object Pooling Module
   - A highly experimental feature to cache object spawns and re-use them as needed, rather than deleting and respawning them. May cause a slight increase in ram usage, but may also heavily reduce load times
   - Currently known to cause errors when used with CullCompany
+- LocalPerformanceReporting
+  - Creates performance reports in the logs every time the ship lands to assist in debugging performance related issues
 - LCSoundTool
   - Should Loading Music Play
     - Enable this if you wish to have music play while levels load in

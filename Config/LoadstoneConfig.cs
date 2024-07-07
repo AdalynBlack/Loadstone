@@ -25,6 +25,8 @@ public static class LoadstoneConfig
 
 	public static ConfigEntry<bool> DunGenOptimizations;
 
+	public static ConfigEntry<bool> LocalPerformanceReports;
+
 	public static ConfigEntry<bool> ShouldLoadingMusicPlay;
 	public static ConfigEntry<float> LoadingMusicFadeTime;
 	public static ConfigEntry<float> LoadingMusicVolume;
@@ -98,6 +100,14 @@ public static class LoadstoneConfig
 				false,
 				"!!! EXPERIMENTAL FEATURE !!!\nEnables object pooling for dungeon spawning and certain parts of initial level generation. This can greatly improve load times, but may increase ram usage in modpacks with many custom interiors. This feature is currently very experimental. The vanilla value is false");
 #endif
+
+		// LocalPerformanceReports
+		LocalPerformanceReports = LoadstoneFile.Bind<bool>(
+				"LocalPerformanceReports",
+				"Enabled",
+				false,
+				"Enables local performance reports, which will appear in the logs every time the ship lands");
+
 
 		// LCSoundTool
 		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(
