@@ -1,3 +1,6 @@
+## v0.1.11
+- Fixed a Null Reference Exception with the new performance stats module
+
 ## v0.1.10
 - Fixed an Incompatibility with HarmonyXTranspilerFix
 
