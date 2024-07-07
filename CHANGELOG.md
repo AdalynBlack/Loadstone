@@ -1,4 +1,3 @@
-## v0.1.12
 - Ported many new features from v0.1.8-v0.1.12 to the main branch
   - Improvements to the internal codebase
   - Improvements to the DunGenOptimizations module
