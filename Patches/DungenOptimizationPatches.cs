@@ -4,6 +4,7 @@ using HarmonyLib;
 using Loadstone.Config;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Emit;
 using UnityEngine;
 
@@ -91,7 +92,11 @@ public class DungenOptimizationPatches
 		var flow = __instance.DungeonFlow;
 
 		if (TagMatchDictionary.ContainsKey(flow))
-			return;
+		{
+			if (!TagMatchDictionary[flow].Values.Any(tile => tile == null))
+				return;
+			Loadstone.LogWarning($"At least one tile in {flow.name} has been deleted since the flow was last cached! The cache will be fully recalculated as a result");
+		}
 
 		HashSet<Tile> tiles = new HashSet<Tile>();
 
