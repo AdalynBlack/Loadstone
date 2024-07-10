@@ -23,8 +23,8 @@ public class DungenOptimizationPatches
 
 		try {
 			__result = DungeonTagMatchTemp[tileA][tileB];
-		} catch (KeyNotFoundException e) {
-			Loadstone.LogError($"A tile was not found in the tile tag cache, and is now being cached: {e}");
+		} catch (KeyNotFoundException) {
+			Loadstone.LogWarning($"The tile pair of \"{tileA.name}\" and \"{tileB.name}\" was not found in the tag cache! This pair is now being cached, which will cause a small performance penalty");
 
 			if (!TagMatchDictionary.ContainsKey(__instance))
 			{
