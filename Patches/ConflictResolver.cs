@@ -54,7 +54,7 @@ public static class ConflictResolver
 	public static void WarnPatch(Patch patch, MethodBase method, string patchType)
 	{
 		if (HasOurs)
-			Loadstone.Log(patchType == "transpiler" || patchType == "IL manipulator" ? LogLevel.Error : LogLevel.Warning, $"The assembly \"{patch.GetMethod(method).DeclaringType.Assembly.GetName().Name}\" has patched the method \"{method.ToString()}\" with a {patchType} using \"{patch.GetMethod(method).ToString()}\", which we also modify. Unexpected behaviour may occur");
+			Loadstone.LogDebug($"The assembly \"{patch.GetMethod(method).DeclaringType.Assembly.GetName().Name}\" has patched the method \"{method.ToString()}\" with a {patchType} using \"{patch.GetMethod(method).ToString()}\", which we also modify. Unexpected behaviour may occur");
 	}
 
 	public static void TryPatch(Type type)
