@@ -1,3 +1,8 @@
+## v0.1.13
+- Improved tag caching invalidation
+- Updated tag cache miss message and reduced its severity
+- Reduced the log severity of conflict detections to Debug
+
 ## v0.1.12
 - Ported many new features from v0.1.8-v0.1.12 to the main branch
   - Improvements to the internal codebase
