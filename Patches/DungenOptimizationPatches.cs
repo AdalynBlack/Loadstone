@@ -37,7 +37,8 @@ public class DungenOptimizationPatches
 			if (!DungeonTagMatchTemp.ContainsKey(tileB))
 				DungeonTagMatchTemp[tileB] = new Dictionary<Tile, bool>();
 
-			DungeonTagMatchTemp[tileA][tileB] = HasMatchingTagPairOriginal(__instance, tileA, tileB);
+			__result = HasMatchingTagPairOriginal(__instance, tileA, tileB);
+			DungeonTagMatchTemp[tileA][tileB] = __result;
 			DungeonTagMatchTemp[tileB][tileA] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
 		}
 
