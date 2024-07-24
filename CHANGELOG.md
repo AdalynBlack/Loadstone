@@ -1,3 +1,7 @@
+## v0.1.14
+- Fixed an issue where an invalid tag cache would cause no return value, resulting in undefined behaviour
+  - Possible fix for [#19](https://github.com/AdalynBlack/Loadstone/issues/19)
+
 ## v0.1.13
 - Improved tag caching invalidation
 - Updated tag cache miss message and reduced its severity
