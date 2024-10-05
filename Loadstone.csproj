@@ -4,7 +4,7 @@
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
 		<Product>Loadstone</Product>
 		<Description>Reduces stuttering during level loading</Description>
-		<Version>0.1.14</Version>
+		<Version>0.1.15</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 
@@ -19,6 +19,9 @@
 		<Exec Command="git symbolic-ref --short HEAD | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}'" ConsoleToMSBuild="True">
 			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
 		</Exec>
+		<PropertyGroup>
+			<OldAssemblyName>$(AssemblyName)</OldAssemblyName>
+		</PropertyGroup>
 		<PropertyGroup Condition="'$(BranchName)'!='main'">
 			<AssemblyName>com.adibtw.loadstone.$(BranchName)</AssemblyName>
 			<Product>$(Product)$(BranchName)</Product>
@@ -77,7 +80,7 @@
 		<Message Text="Zipping Files for Thunderstore" Importance="High"/>
 		<Delete Files="$(Product)Thunderstore.zip"/>
 		<WriteLinesToFile File="manifest.json" Lines="{&quot;name&quot;: &quot;$(Product)&quot;,&quot;description&quot;: &quot;$(Description)&quot;,&quot;version_number&quot;: &quot;$(Version)&quot;,&quot;dependencies&quot;: $(ThunderDeps),&quot;website_url&quot;: &quot;$(ThunderURL)&quot;}" Overwrite="true"/>
-		<Exec Command="zip -j $(Product)Thunderstore.zip README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(AssemblyName).dll manifest.json"/>
+		<Exec Command="zip -j $(Product)Thunderstore.zip README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
 		<Exec Command="zip -j $(Product)Thunderstore.zip PackageAdditions/*"/>
 		<Delete Files="manifest.json"/>
 	</Target>
