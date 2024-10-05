@@ -1,3 +1,6 @@
+## v0.1.15
+- Gave Nightly a different GUID
+
 ## v0.1.14
 - Fixed an issue where an invalid tag cache would cause no return value, resulting in undefined behaviour
   - Possible fix for [#19](https://github.com/AdalynBlack/Loadstone/issues/19)

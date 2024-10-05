@@ -20,6 +20,7 @@
 			<Output TaskParameter="ConsoleOutput" PropertyName="BranchName"/>
 		</Exec>
 		<PropertyGroup Condition="'$(BranchName)'!='main'">
+			<AssemblyName>com.adibtw.loadstone.$(BranchName)</AssemblyName>
 			<Product>$(Product)$(BranchName)</Product>
 			<DefineConstants>NIGHTLY</DefineConstants>
 		</PropertyGroup>
