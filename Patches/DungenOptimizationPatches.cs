@@ -91,11 +91,11 @@ public class DungenOptimizationPatches
 	static void TileTagPrecalcPatch(DungeonGenerator __instance)
 	{
 		var flow = __instance.DungeonFlow;
-    
-    if (!flow) {
-      Loadstone.LogWarning("The dungeon generator's flow is null or deleted!");
-      return;
-    }
+		
+		if (!flow) {
+			Loadstone.LogWarning("The dungeon generator's flow is null or deleted!");
+			return;
+		}
 
 		if (TagMatchDictionary.ContainsKey(flow))
 		{
