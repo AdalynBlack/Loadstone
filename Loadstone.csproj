@@ -90,11 +90,6 @@
 		<Exec Command="zip $(Product)Thunderstore.zip CHANGELOG.md"/>
 	</Target>
 
-	<Target Name="AddToProfile" AfterTargets="Build">
-		<Message Text="Copying Compiled Mod $(Product) to Profile Plugins Folder" Importance="High"/>
-		<Exec Command="unzip -o $(Product)Thunderstore.zip -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
-	</Target>
-
 	<Target Name="LaunchProfile" AfterTargets="AddToProfile" Condition="'$(Configuration)' == 'Launch'">
 		<Exec Command="$(LaunchCommand)"/>
 	</Target>
