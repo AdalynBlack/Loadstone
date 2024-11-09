@@ -33,7 +33,7 @@ public class RoundManagerMusicPatches
 		loadingAudioSource.transform.parent = StartOfRound.Instance.speakerAudioSource.transform;
 	}
 
-	[HarmonyPatch("LoadNewLevel")]
+	[HarmonyPatch("GenerateNewLevelClientRpc")]
 	[HarmonyPrefix]
 	static void PlayWaitingMusicPatch()
 	{
@@ -45,7 +45,7 @@ public class RoundManagerMusicPatches
 	}
 
 	[HarmonyPatch("ResetEnemySpawningVariables")]
-	[HarmonyPrefix]
+	[HarmonyPostfix]
 	static void StopWaitingMusicPatch()
 	{
 		RoundManager.Instance.StartCoroutine(FadeOutMusic(loadingAudioSource));
