@@ -1,3 +1,9 @@
+## v0.1.16
+- Fixed [loading music only being heard by the host](https://discord.com/channels/1168655651455639582/1242303311793885317/1302470248368312322)
+    - Thanks to @zetaarcade for reporting this issue
+- Fixed an error in the Dungen Optimizations which would cause errors with certain interiors
+    - Thanks to @tolian for reporting this issue
+
 ## v0.1.15
 - Gave Nightly a different GUID
 
