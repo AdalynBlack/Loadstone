@@ -21,15 +21,18 @@ public class NavmeshPatches
 		Loadstone.LogDebug("Writing SpawnOutsideHazards Transpiler");
 
 		var newInstructions = new CodeMatcher(instructions)
+      // Look for `gameObject.GetComponent<NavMeshSurface>()`
 			.MatchForward(false,
 				new CodeMatch(OpCodes.Callvirt, AccessTools.Method(
 						typeof(GameObject), "GetComponent",
 						generics: new Type[] {typeof(NavMeshSurface)})))
 
+      // Go to the instruction following that function call, and load `this` as a reference for running coroutines on
 			.Advance(1)
 			.InsertAndAdvance(
 				new CodeInstruction(OpCodes.Ldarg_0))
 
+      // Replace `navMeshSurface.BuildNavMesh()` with `NavmeshPatches.GenerateNavMeshAsync(navMeshSurface, this)`
 			.Set(
 				OpCodes.Call,
 				AccessTools.Method(
@@ -49,8 +52,11 @@ public class NavmeshPatches
 		Loadstone.LogDebug("Writing UnityNavMeshAdapter Transpiler");
 
 		var newInstructions = new CodeMatcher(instructions)
+      // Search for `navMeshSurface.BuildNavMesh()` on repeat
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Callvirt, AccessTools.DeclaredMethod(typeof(NavMeshSurface), "BuildNavMesh")))
+
+      // Replace each instance of BuildNavMesh() with GenerateNavMeshAsync()
 			.Repeat( matcher =>
 					matcher.InsertAndAdvance(
 						new CodeInstruction(OpCodes.Ldarg_0))
@@ -78,8 +84,6 @@ public class NavmeshPatches
 		Loadstone.LogDebug($"Updating navmesh with {sources.Count} obstacles");
 
 		var buildSettings = navMeshSurface.GetBuildSettings();
-		//buildSettings.tileSize = 64;
-		//buildSettings.maxJobWorkers = 4;
 		
 		if (navMeshSurface.navMeshData != null)
 		{

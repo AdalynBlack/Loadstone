@@ -18,6 +18,7 @@ public class FromProxyPatches {
 	[HarmonyPrefix]
 	static bool FromProxyPre(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator)
 	{
+    // Reset the completion variable
 		ConversionComplete = false;
 		__instance.StartCoroutine(FromProxyEnumerator(generator, proxyDungeon, __instance));
 		return false;
@@ -25,6 +26,7 @@ public class FromProxyPatches {
 
 	static IEnumerator FromProxyEnumerator(DungeonGenerator generator, DungeonProxy proxyDungeon, Dungeon __instance)
 	{
+    // All code, unless otherwise noted, is effectively a recreation of Dungen's FromProxy function, piecing it back together as an IEnumerator
 		__instance.Clear();
 		Dictionary<TileProxy, Tile> dictionary = new Dictionary<TileProxy, Tile>();
 
@@ -39,6 +41,8 @@ public class FromProxyPatches {
 		}
 
 		FromProxyEnd(__instance, proxyDungeon, generator, dictionary);
+
+    // Mark the FromProxy process as complete to allow the program to progress
 		ConversionComplete = true;
 	}
 
@@ -51,18 +55,21 @@ public class FromProxyPatches {
 			Loadstone.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's first inner for loop");
 			var matcher = new CodeMatcher(instructions, generator);
 
+      // Find the beginning of the for loop
 			var start = matcher
 				.MatchForward(false,
 						new CodeMatch(OpCodes.Br))
 				.Advance(4)
 				.Pos;
 
+      // Load the dictionary and TileProxy reference from the function arguments, and store them to the existing local variables
 			matcher.InsertAndAdvance(
 					new CodeInstruction(OpCodes.Ldarg_3),
 					new CodeInstruction(OpCodes.Stloc_2),
 					new CodeInstruction(OpCodes.Ldarg_1),
 					new CodeInstruction(OpCodes.Stloc_0));
 
+      // Find the end of the loop, insert a return instruction, and note the position
 			var end = matcher
 				.MatchForward(false,
 						new CodeMatch(OpCodes.Endfinally),
@@ -72,8 +79,10 @@ public class FromProxyPatches {
 				.Insert(new CodeInstruction(OpCodes.Ret))
 				.Pos;
 
+      // Createa a label at the new return instruction
 			matcher.CreateLabel(out Label endLabel);
 
+      // Find a part of the code that continues the loop, and redirect it to the new return statement
 			matcher
 				.MatchBack(false,
 					new CodeMatch(OpCodes.Brtrue),
@@ -81,9 +90,11 @@ public class FromProxyPatches {
 				.Advance(1)
 				.SetOperandAndAdvance(endLabel);
 
+      // Extract the for loop instructions using the previous start and end points
 			var codeList = matcher.InstructionsInRange(start, end).AsEnumerable();
 
 #if NIGHTLY
+      // Apply the Object Pooling Patches if applicable, since Reverse Patches happen before any other transpilers
 			if (LoadstoneConfig.ObjectPooling.Value)
 				codeList = PoolingPatches.FromProxyPoolingPatch(codeList);
 #endif
@@ -105,6 +116,7 @@ public class FromProxyPatches {
 			Loadstone.LogDebug("Attempting to reverse-patch Dungeon::FromProxy's final code");
 			var matcher = new CodeMatcher(instructions);
 
+      // Find the instructions immediately following the primary for loop, and note the position
 			var start = matcher
 				.MatchForward(false,
 						new CodeMatch(OpCodes.Endfinally))
@@ -112,16 +124,24 @@ public class FromProxyPatches {
 						new CodeMatch(OpCodes.Ldarg_1))
 				.Pos;
 	
+      // Load the dictionary to the expected local variable
 			matcher.InsertAndAdvance(
 					new CodeInstruction(OpCodes.Ldarg_3),
 					new CodeInstruction(OpCodes.Stloc_0),
+
+      // These instructions exist to get around a bug within MonoMod
+      // The original function has a GameObject variable. This carries over to this function as well
+      // However, if no code pulls from UnityEngine, MonoMod mistakenly removes the function's dependency on UnityEngine
+      // This is how I decided to inject a UnityEngine dependency to fix the issue
 					new CodeInstruction(OpCodes.Ldtoken, typeof(UnityEngine.GameObject)),
 					new CodeInstruction(OpCodes.Pop));
 
+      // Store the position of the end of the function
 			var end = matcher
 				.End()
 				.Pos;
 
+      // Extract the code within the start and end range previously stored
 			var codeList = matcher.InstructionsInRange(start, end);
 
 			Loadstone.LogDebug("Validating reverse-patched Dungeon::FromProxy's final code");
@@ -142,6 +162,8 @@ public class FromProxyPatches {
 		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
 
 		var newInstructions = new CodeMatcher(instructions)
+      // This represents a `yield return null` statement in the function immediately following FromProxy
+      // We will be replacing this with `yield return WaitUntil(PostProcessCheck)` instead
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Ldnull),
 					new CodeMatch(OpCodes.Stfld))
@@ -151,6 +173,7 @@ public class FromProxyPatches {
 					new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "PostProcessCheck")),
 					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(Func<System.Boolean>), parameters: findFuncParams)),
 					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
+      // This puts `WaitUntil(PostProcessCheck)` on the top of the stack, as opposed to `null`, making PostProcess wait for FromProxyEnumerator to finish
 			.InstructionEnumeration();
 		
 		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
