@@ -86,6 +86,43 @@ public class DungenOptimizationPatches
 		return flowTagMatchDict;
 	}
 
+  public static List<Func<DungeonGenerator, bool>> cacheValidators =
+    new List<Func<DungeonGenerator, bool>>{ generator => {
+        var flow = generator.DungeonFlow;
+
+        if (!TagMatchDictionary.ContainsKey(flow))
+          return false;
+
+        if (!TagMatchDictionary[flow].Values.Any(tile => tile == null))
+          return true;
+
+        Loadstone.LogWarning($"At least one tile in {flow.name} has been deleted since the flow was last cached! The cache will be fully recalculated as a result");
+        return false;
+      }};
+
+  public static List<Func<DungeonGenerator, HashSet<Tile>>> tileCollectors =
+    new List<Func<DungeonGenerator, HashSet<Tile>>>{ generator => {
+        var flow = generator.DungeonFlow;
+
+        HashSet<Tile> tiles = new HashSet<Tile>();
+
+        foreach (var node in flow.Nodes)
+        {
+          GenerateTileHashSet(ref tiles, node.TileSets);
+        }
+
+        foreach (var line in flow.Lines)
+        {
+          foreach (var archetype in line.DungeonArchetypes)
+          {
+            GenerateTileHashSet(ref tiles, archetype.TileSets);
+            GenerateTileHashSet(ref tiles, archetype.BranchCapTileSets);
+          }
+        }
+
+        return tiles;
+      }};
+
   [HarmonyPriority(Priority.VeryLow)]
 	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
 	[HarmonyPrefix]
@@ -98,28 +135,16 @@ public class DungenOptimizationPatches
 			return;
 		}
 
-		if (TagMatchDictionary.ContainsKey(flow))
-		{
-			if (!TagMatchDictionary[flow].Values.Any(tile => tile == null))
-				return;
-			Loadstone.LogWarning($"At least one tile in {flow.name} has been deleted since the flow was last cached! The cache will be fully recalculated as a result");
-		}
+    var cacheValidity = cacheValidators.All(v => v(__instance));
+
+    if (cacheValidity)
+      return;
 
 		HashSet<Tile> tiles = new HashSet<Tile>();
 
-		foreach (var node in flow.Nodes)
-		{
-			GenerateTileHashSet(ref tiles, node.TileSets);
-		}
-
-		foreach (var line in flow.Lines)
-		{
-			foreach (var archetype in line.DungeonArchetypes)
-			{
-				GenerateTileHashSet(ref tiles, archetype.TileSets);
-				GenerateTileHashSet(ref tiles, archetype.BranchCapTileSets);
-			}
-		}
+    tileCollectors.ForEach(collector => {
+      tiles.UnionWith(collector(__instance));
+    });
 
 		TagMatchDictionary.Add(flow, TileConnectionTagOptimization(tiles, flow));
 		DungeonTagMatchTemp = TagMatchDictionary[flow];
