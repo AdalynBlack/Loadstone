@@ -86,6 +86,7 @@ public class DungenOptimizationPatches
 		return flowTagMatchDict;
 	}
 
+  [HarmonyPriority(Priority.VeryLow)]
 	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
 	[HarmonyPrefix]
 	static void TileTagPrecalcPatch(DungeonGenerator __instance)
