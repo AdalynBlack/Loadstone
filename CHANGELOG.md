@@ -1,3 +1,8 @@
+## v0.1.17
+- Added a new event system to the dungen optimizations
+    - This will allow mods which modify dungen's generation algorithm to notify Loadstone of the tileset changes made
+    - This feature will improve compatibility with ScarletDevilMansion, and may be used by other mods later on as well
+
 ## v0.1.16
 - Fixed [loading music only being heard by the host](https://discord.com/channels/1168655651455639582/1242303311793885317/1302470248368312322)
     - Thanks to @zetaarcade for reporting this issue
