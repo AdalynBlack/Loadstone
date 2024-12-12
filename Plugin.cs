@@ -113,6 +113,14 @@ public class Loadstone : BaseUnityPlugin
 		ConflictResolver.TryPatch(typeof(RoundManagerMusicPatches));
 	}
 
+  public static bool IsNightly() {
+#if NIGHTLY
+    return true;
+#else
+    return false;
+#endif
+  }
+
 	internal static void Log(LogLevel level, object data)
 	{
 		CurrentLog.Log(level, data);

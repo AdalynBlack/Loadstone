@@ -4,7 +4,7 @@
 		<AssemblyName>com.adibtw.loadstone</AssemblyName>
 		<Product>Loadstone</Product>
 		<Description>Reduces stuttering during level loading</Description>
-		<Version>0.1.17</Version>
+		<Version>0.1.18</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 
@@ -23,7 +23,6 @@
 			<OldAssemblyName>$(AssemblyName)</OldAssemblyName>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(BranchName)'!='main'">
-			<AssemblyName>com.adibtw.loadstone.$(BranchName)</AssemblyName>
 			<Product>$(Product)$(BranchName)</Product>
 			<DefineConstants>NIGHTLY</DefineConstants>
 		</PropertyGroup>

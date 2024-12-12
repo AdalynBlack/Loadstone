@@ -1,3 +1,7 @@
+## v0.1.18
+-  Revert v0.1.15
+    - Instead, mods should use `Loadstone.IsNightly()` to check whether the nightly or main version is in use
+
 ## v0.1.17
 - Added a new event system to the dungen optimizations
     - This will allow mods which modify dungen's generation algorithm to notify Loadstone of the tileset changes made
