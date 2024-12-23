@@ -64,13 +64,13 @@
 			<HintPath>$(LC_PATH)/Lethal Company_Data/Managed/Assembly-CSharp-firstpass.dll</HintPath>
 		</Reference>
 		<Reference Include="LethalConfig">
-			<HintPath>./Deps/Soft/LethalConfig.dll</HintPath>
+			<HintPath>./deps/soft/LethalConfig.dll</HintPath>
 		</Reference>
 		<Reference Include="LC_SoundTool">
-			<HintPath>./Deps/Soft/LC_SoundTool.dll</HintPath>
+			<HintPath>./deps/soft/LC_SoundTool.dll</HintPath>
 		</Reference>
 		<Reference Include="LethalExpansionCore">
-			<HintPath>./Deps/Soft/LethalExpansionCore.dll</HintPath>
+			<HintPath>./deps/soft/LethalExpansionCore.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 
