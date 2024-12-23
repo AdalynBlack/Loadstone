@@ -6,8 +6,8 @@
 		<Description>Reduces stuttering during level loading</Description>
 		<Version>0.1.19</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
-    <IconPath>icons/icon.png</IconPath>
+		<LangVersion>latest</LangVersion>
+		<IconPath>icons/icon.png</IconPath>
 
 		<ThunderDeps>["BepInEx-BepInExPack-5.4.2100"]</ThunderDeps>
 		<ThunderURL>https://github.com/AdalynBlack/Loadstone</ThunderURL>
@@ -25,16 +25,17 @@
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(BranchName)'!='main'">
 			<Product>$(Product) $(BranchName) Beta</Product>
-      <IconPath>icons/icon_beta.png</IconPath>
-      <Description>Unstable Beta version of Loadstone. !!EXPECT OCCASIONAL BREAKAGES!!</Description>
+			<IconPath>icons/icon_beta.png</IconPath>
+			<Description>Unstable Beta version of Loadstone. !!EXPECT OCCASIONAL BREAKAGES!!</Description>
 			<DefineConstants>NIGHTLY</DefineConstants>
 		</PropertyGroup>
 	</Target>
 
 	<ItemGroup>
-		<PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+		<PackageReference Include="BepInEx.BaseLib" Version="5.4.21.0" Publicize="true" />
 		<PackageReference Include="BepInEx.Core" Version="5.*"/>
 		<PackageReference Include="BepInEx.PluginInfoProps" Version="1.*"/>
+		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" />
 	</ItemGroup>
 
@@ -66,9 +67,6 @@
 		<Reference Include="LethalConfig">
 			<HintPath>./deps/soft/LethalConfig.dll</HintPath>
 		</Reference>
-		<Reference Include="LC_SoundTool">
-			<HintPath>./deps/soft/LC_SoundTool.dll</HintPath>
-		</Reference>
 		<Reference Include="LethalExpansionCore">
 			<HintPath>./deps/soft/LethalExpansionCore.dll</HintPath>
 		</Reference>
@@ -80,22 +78,22 @@
 
 	<Target Name="PackageThunderstore" AfterTargets="Build">
 		<Message Text="Zipping Files for Thunderstore" Importance="High"/>
-    <Delete Files="'thunderstore/$(Product)'"/>
-    <Copy SourceFiles="$(IconPath)" DestinationFiles="icon.png"/>
+		<Delete Files="'thunderstore/$(Product)'"/>
+		<Copy SourceFiles="$(IconPath)" DestinationFiles="icon.png"/>
 		<WriteLinesToFile File="manifest.json" Lines="{&quot;name&quot;: &quot;$(Product)&quot;,&quot;description&quot;: &quot;$(Description)&quot;,&quot;version_number&quot;: &quot;$(Version)&quot;,&quot;dependencies&quot;: $(ThunderDeps),&quot;website_url&quot;: &quot;$(ThunderURL)&quot;}" Overwrite="true"/>
-    <Exec Command="zip -9j 'thunderstore/$(Product)' README.md LICENSE icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
-    <Exec Command="zip -9j 'thunderstore/$(Product)' assets/*"/>
+		<Exec Command="zip -9j 'thunderstore/$(Product)' README.md LICENSE icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
+		<Exec Command="zip -9j 'thunderstore/$(Product)' assets/*"/>
 		<Delete Files="manifest.json icon.png"/>
 	</Target>
 
 	<Target Name="AddToProfile" AfterTargets="Build" Condition="Exists('$(PROFILE_PATH)')">
 		<Message Text="Copying Compiled Mod $(Product) to Profile Plugins Folder" Importance="High"/>
-    <Exec Command="unzip -o 'thunderstore/$(Product).zip' -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
+		<Exec Command="unzip -o 'thunderstore/$(Product).zip' -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
 	</Target>
 
 	<Target Name="AddChangelogToPackage" AfterTargets="PackageThunderstore" Condition="'$(Configuration)' == 'Release' And Exists('CHANGELOG.md')">
 		<Message Text="Adding Changelog to Package" Importance="High"/>
-    <Exec Command="zip 'thunderstore/$(Product)' CHANGELOG.md"/>
+		<Exec Command="zip 'thunderstore/$(Product)' CHANGELOG.md"/>
 	</Target>
 
 	<Target Name="LaunchProfile" AfterTargets="AddToProfile" Condition="'$(Configuration)' == 'Launch'">
