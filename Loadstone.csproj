@@ -24,7 +24,9 @@
 			<OldAssemblyName>$(AssemblyName)</OldAssemblyName>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(BranchName)'!='main'">
-			<Product>$(Product)$(BranchName)</Product>
+			<Product>$(Product) $(BranchName) Beta</Product>
+      <IconPath>icons/icon_beta.png</IconPath>
+      <Description>Unstable Beta version of Loadstone. !!EXPECT OCCASIONAL BREAKAGES!!</Description>
 			<DefineConstants>NIGHTLY</DefineConstants>
 		</PropertyGroup>
 	</Target>
@@ -78,20 +80,22 @@
 
 	<Target Name="PackageThunderstore" AfterTargets="Build">
 		<Message Text="Zipping Files for Thunderstore" Importance="High"/>
-		<Delete Files="$(Product)Thunderstore.zip"/>
+    <Delete Files="'thunderstore/$(Product)'"/>
+    <Copy SourceFiles="$(IconPath)" DestinationFiles="icon.png"/>
 		<WriteLinesToFile File="manifest.json" Lines="{&quot;name&quot;: &quot;$(Product)&quot;,&quot;description&quot;: &quot;$(Description)&quot;,&quot;version_number&quot;: &quot;$(Version)&quot;,&quot;dependencies&quot;: $(ThunderDeps),&quot;website_url&quot;: &quot;$(ThunderURL)&quot;}" Overwrite="true"/>
-		<Exec Command="zip -j $(Product)Thunderstore.zip README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
-		<Exec Command="zip -j $(Product)Thunderstore.zip PackageAdditions/*"/>
-		<Delete Files="manifest.json"/>
+    <Exec Command="zip -9j 'thunderstore/$(Product)' README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
+    <Exec Command="zip -9j 'thunderstore/$(Product)' assets/*"/>
+		<Delete Files="manifest.json icon.png"/>
+	</Target>
 
 	<Target Name="AddToProfile" AfterTargets="Build" Condition="Exists('$(PROFILE_PATH)')">
 		<Message Text="Copying Compiled Mod $(Product) to Profile Plugins Folder" Importance="High"/>
-    <Exec Command="unzip -o '$(Product)Thunderstore.zip' -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
+    <Exec Command="unzip -o 'thunderstore/$(Product).zip' -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
 	</Target>
 
 	<Target Name="AddChangelogToPackage" AfterTargets="PackageThunderstore" Condition="'$(Configuration)' == 'Release' And Exists('CHANGELOG.md')">
 		<Message Text="Adding Changelog to Package" Importance="High"/>
-		<Exec Command="zip $(Product)Thunderstore.zip CHANGELOG.md"/>
+    <Exec Command="zip 'thunderstore/$(Product)' CHANGELOG.md"/>
 	</Target>
 
 	<Target Name="LaunchProfile" AfterTargets="AddToProfile" Condition="'$(Configuration)' == 'Launch'">
