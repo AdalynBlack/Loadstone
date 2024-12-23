@@ -1,5 +1,12 @@
+## v0.1.19
+- Renamed Nightly to Unstable Beta
+    - This should help clear up a common point of confusion
+    - The `IsNightly()` function added previously will not be renamed
+- Updated Unstable Beta's Icon and Description
+- Reorganized project structure
+
 ## v0.1.18
--  Revert v0.1.15
+- Revert v0.1.15
     - Instead, mods should use `Loadstone.IsNightly()` to check whether the nightly or main version is in use
 
 ## v0.1.17
