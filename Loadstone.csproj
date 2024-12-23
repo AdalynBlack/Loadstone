@@ -6,7 +6,8 @@
 		<Description>Reduces stuttering during level loading</Description>
 		<Version>0.1.18</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
+    <IconPath>icons/icon.png</IconPath>
 
 		<ThunderDeps>["BepInEx-BepInExPack-5.4.2100"]</ThunderDeps>
 		<ThunderURL>https://github.com/AdalynBlack/Loadstone</ThunderURL>
@@ -82,6 +83,10 @@
 		<Exec Command="zip -j $(Product)Thunderstore.zip README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
 		<Exec Command="zip -j $(Product)Thunderstore.zip PackageAdditions/*"/>
 		<Delete Files="manifest.json"/>
+
+	<Target Name="AddToProfile" AfterTargets="Build" Condition="Exists('$(PROFILE_PATH)')">
+		<Message Text="Copying Compiled Mod $(Product) to Profile Plugins Folder" Importance="High"/>
+    <Exec Command="unzip -o '$(Product)Thunderstore.zip' -d &quot;$(PROFILE_PATH)/AdiBTW-$(Product)&quot;"/>
 	</Target>
 
 	<Target Name="AddChangelogToPackage" AfterTargets="PackageThunderstore" Condition="'$(Configuration)' == 'Release' And Exists('CHANGELOG.md')">
