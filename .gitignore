@@ -1,5 +1,5 @@
 bin/
 obj/
 .editorconfig
-*Thunderstore.zip
+thunderstore/*.zip
 manifest.json
