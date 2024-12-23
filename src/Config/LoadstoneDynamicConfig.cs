@@ -20,6 +20,8 @@ internal static class LoadstoneDynamicConfig
 				
 				new BoolCheckBoxConfigItem(LoadstoneConfig.ShouldLoadingMusicPlay,
 						new BoolCheckBoxOptions {RequiresRestart = false}),
+				new BoolCheckBoxConfigItem(LoadstoneConfig.ShouldLoadingMusicLoop,
+						new BoolCheckBoxOptions {RequiresRestart = false}),
 				new FloatSliderConfigItem(LoadstoneConfig.LoadingMusicFadeTime, 
 						new FloatSliderOptions {
 							RequiresRestart = false,

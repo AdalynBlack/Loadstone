@@ -1,16 +1,17 @@
 using HarmonyLib;
 using Loadstone.Config;
-using LCSoundTool;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-namespace Loadstone.Patches.LCSoundTool;
+namespace Loadstone.Patches;
 
 [HarmonyPatch(typeof(RoundManager))]
 public class RoundManagerMusicPatches
 {
 	static internal AudioSource loadingAudioSource;
-	static internal AudioClip loadingAudioClip = SoundTool.GetAudioClip($"AdiBTW-{PluginInfo.PLUGIN_NAME}", "LoadstoneLoading.ogg");
+	static internal AudioClip loadingAudioClip = null;
 
 	[HarmonyPatch("Awake")]
 	[HarmonyPrefix]
@@ -20,7 +21,11 @@ public class RoundManagerMusicPatches
 			Object.Destroy(loadingAudioSource);
 
 		if (loadingAudioClip == null)
-			return;
+			loadingAudioClip = Resources.FindObjectsOfTypeAll(typeof(AudioClip))
+				.Cast<AudioClip>()
+				.FirstOrDefault<AudioClip>(a => a.name == "ElevatorJingle");
+		if (loadingAudioClip == null)
+			Loadstone.LogError("Unable to find ElevatorJingle");
 		
 		if (loadingAudioClip.loadState != AudioDataLoadState.Loaded)
 		{
@@ -29,7 +34,8 @@ public class RoundManagerMusicPatches
 
 		loadingAudioSource = Object.Instantiate(StartOfRound.Instance.speakerAudioSource);
 		loadingAudioSource.name = "LoadstoneLoading";
-		loadingAudioSource.clip = loadingAudioClip;
+		loadingAudioSource.clip = Object.Instantiate(loadingAudioClip);
+		loadingAudioSource.clip.name = loadingAudioSource.name;
 		loadingAudioSource.transform.parent = StartOfRound.Instance.speakerAudioSource.transform;
 	}
 
@@ -39,6 +45,8 @@ public class RoundManagerMusicPatches
 	{
 		if (!LoadstoneConfig.ShouldLoadingMusicPlay.Value)
 			return;
+
+		loadingAudioSource.loop = LoadstoneConfig.ShouldLoadingMusicLoop.Value;
 
 		loadingAudioSource.volume = LoadstoneConfig.LoadingMusicVolume.Value;
 		loadingAudioSource.Play();

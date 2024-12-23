@@ -6,6 +6,8 @@ namespace Loadstone.Config;
 
 public static class LoadstoneConfig
 {
+	public static int CurrentVersion = 1;
+
 	public static ConfigFile LoadstoneFile;
 
 	public static ConfigEntry<bool> AsyncDungeon;
@@ -28,8 +30,11 @@ public static class LoadstoneConfig
 	public static ConfigEntry<bool> LocalPerformanceReports;
 
 	public static ConfigEntry<bool> ShouldLoadingMusicPlay;
+	public static ConfigEntry<bool> ShouldLoadingMusicLoop;
 	public static ConfigEntry<float> LoadingMusicFadeTime;
 	public static ConfigEntry<float> LoadingMusicVolume;
+
+	public static ConfigEntry<int> LastConfigVersion;
 
 	public enum SeedDisplayType
 	{
@@ -109,16 +114,23 @@ public static class LoadstoneConfig
 				"Enables local performance reports, which will appear in the logs every time the ship lands");
 
 
-		// LCSoundTool
+		// LoadingMusic
 		ShouldLoadingMusicPlay = LoadstoneFile.Bind<bool>(
-				"LCSoundTool",
+				"LoadingMusic",
 				"Should Loading Music Play",
 				false,
 				new ConfigDescription(
-					"Should we play loading music as the level loads in? Requires LCSoundTool to be installed"));
+					"Should we play loading music as the level loads in?"));
+
+		ShouldLoadingMusicLoop = LoadstoneFile.Bind<bool>(
+				"LoadingMusic",
+				"Should Loading Music Loop",
+				true,
+				new ConfigDescription(
+					"Should the loading music loop?"));
 
 		LoadingMusicFadeTime = LoadstoneFile.Bind<float>(
-				"LCSoundTool",
+				"LoadingMusic",
 				"Loading Music Fade Time",
 				15f,
 				new ConfigDescription(
@@ -126,11 +138,58 @@ public static class LoadstoneConfig
 					acceptableValues: new AcceptableValueRange<float>(0, 30)));
 
 		LoadingMusicVolume = LoadstoneFile.Bind<float>(
-				"LCSoundTool",
+				"LoadingMusic",
 				"Loading Music Volume",
 				0.75f,
 				new ConfigDescription(
 					"The volume of the loading music",
 					acceptableValues: new AcceptableValueRange<float>(0, 1.5f)));
+
+		LastConfigVersion = LoadstoneFile.Bind<int>(
+				"Debug",
+				"Last Config Version",
+				0,
+				new ConfigDescription(
+					"The version when this config was last saved. Used for config migrations"));
+
+		MigrateConfigs();
+	}
+
+	/* Migration code borrowed from LC_OpenBodyCams */
+	private static void MigrateConfigs() {
+		if (null == LoadstoneFile.OrphanedEntries)
+		{
+			Loadstone.LogError("Failed to migrate config, orphaned entries property was not found.");
+			return;
+		}
+
+		foreach (var orphan in LoadstoneFile.OrphanedEntries.Keys)
+		{
+			Loadstone.LogDebug($"{orphan}");
+		}
+
+		if (LastConfigVersion.Value > CurrentVersion)
+		{
+			Loadstone.LogWarning("Previous config version is newer than current. Did you downgrade your mod?");
+			return;
+		}
+
+		if (LastConfigVersion.Value == CurrentVersion)
+			return;
+
+		MigrateVersion(0, new ConfigDefinition("LCSoundTool", "Should Loading Music Play"), ShouldLoadingMusicPlay);
+		MigrateVersion(0, new ConfigDefinition("LCSoundTool", "Loading Music Fade Time"), LoadingMusicFadeTime);
+		MigrateVersion(0, new ConfigDefinition("LCSoundTool", "Loading Music Volume"), LoadingMusicVolume);
+		LastConfigVersion.Value = 1;
+	}
+
+	private static void MigrateVersion<T>(int fromVersion, ConfigDefinition oldConfigDefinition, ConfigEntry<T> newConfig) {
+		var orphans = LoadstoneFile.OrphanedEntries;
+		if (LastConfigVersion.Value <= fromVersion && orphans.TryGetValue(oldConfigDefinition, out var oldConfig))
+		{
+			Loadstone.LogInfo($"Migrating '{oldConfigDefinition}' to '{newConfig.Definition}' from v{fromVersion}");
+			newConfig.Value = TomlTypeConverter.ConvertToValue<T>(oldConfig);
+			orphans.Remove(oldConfigDefinition);
+		}
 	}
 }
