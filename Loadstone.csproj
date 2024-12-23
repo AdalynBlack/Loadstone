@@ -83,7 +83,7 @@
     <Delete Files="'thunderstore/$(Product)'"/>
     <Copy SourceFiles="$(IconPath)" DestinationFiles="icon.png"/>
 		<WriteLinesToFile File="manifest.json" Lines="{&quot;name&quot;: &quot;$(Product)&quot;,&quot;description&quot;: &quot;$(Description)&quot;,&quot;version_number&quot;: &quot;$(Version)&quot;,&quot;dependencies&quot;: $(ThunderDeps),&quot;website_url&quot;: &quot;$(ThunderURL)&quot;}" Overwrite="true"/>
-    <Exec Command="zip -9j 'thunderstore/$(Product)' README.md icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
+    <Exec Command="zip -9j 'thunderstore/$(Product)' README.md LICENSE icon.png bin/$(Configuration)/$(TargetFramework)/$(OldAssemblyName).dll manifest.json"/>
     <Exec Command="zip -9j 'thunderstore/$(Product)' assets/*"/>
 		<Delete Files="manifest.json icon.png"/>
 	</Target>
