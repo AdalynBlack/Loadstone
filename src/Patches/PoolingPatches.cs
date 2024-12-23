@@ -41,7 +41,7 @@ public class PoolingPatches
 	{
 		Loadstone.LogDebug("Attempting to inject pooling patches into DungeonProxy::AddTile");
 
-    // Replace any GameObject.Instantiate calls with ObjectPooling's Instantiate method
+		// Replace any GameObject.Instantiate calls with ObjectPooling's Instantiate method
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false, InstantiateMatcher)
 			.SetOperandAndAdvance(
@@ -59,7 +59,7 @@ public class PoolingPatches
 	{
 		Loadstone.LogDebug("Attempting to inject pooling patches into DungeonProxy::RemoveTile");
 
-    // Replace Object.DestroyImmediate calls with ObjectPooling's release method
+		// Replace Object.DestroyImmediate calls with ObjectPooling's release method
 		var newInstructions = new CodeMatcher(instructions)
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Call, AccessTools.DeclaredMethod(typeof(UnityEngine.Object), "DestroyImmediate", parameters: new Type[] { typeof(UnityEngine.Object) })))

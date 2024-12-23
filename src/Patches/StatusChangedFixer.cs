@@ -18,7 +18,7 @@ public class StatusChangedFixer
 					new CodeMatch(OpCodes.Ret))
 			.CreateLabel(out var returnLabel)
 			.Start()
-      // Redirect this branch to return, as opposed to allowing it to remove this function from the status changed callback
+			// Redirect this branch to return, as opposed to allowing it to remove this function from the status changed callback
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Bne_Un))
 			.SetOperandAndAdvance(returnLabel)
