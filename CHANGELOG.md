@@ -2,7 +2,13 @@
 - Renamed Nightly to Unstable Beta
     - This should help clear up a common point of confusion
     - The `IsNightly()` function added previously will not be renamed
+    - This renaming will result in a new config being created. I recommend copying old config values over and deleting the old config after
 - Updated Unstable Beta's Icon and Description
+- Removed LCSoundTool dependency for Loading Sounds
+    - Waiting sounds will now use the vanilla ElevatorJingle sound instead
+    - Mods which previously modified Loadstone's loading sound will still work
+    - Mods which modify the elevator jingle sound may cause issues
+    - Added a config option to loop the loading audio. Defaults to true
 - Reorganized project structure
 
 ## v0.1.18
