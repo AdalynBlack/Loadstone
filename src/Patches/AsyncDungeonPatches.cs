@@ -4,6 +4,7 @@ using Loadstone.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection.Emit;
 
 namespace Loadstone.Patches;
@@ -37,18 +38,19 @@ public class AsyncDungeonPatches
 		return newInstructions;
 	}
 
-	[HarmonyPatch(typeof(RoundManager), "GenerateNewFloor")]
+	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
 	[HarmonyPrefix]
-	static void GenerateNewFloorPatch(RoundManager __instance)
+	static void GenerateNewFloorPatch(DungeonGenerator __instance)
 	{
-		if (__instance.dungeonGenerator == null)
+		Loadstone.LogDebug(__instance.DungeonFlow.name);
+		if (LoadstoneConfig.AsyncDungeonBlacklist.Value.Split(",").ToList().Contains(__instance.DungeonFlow.name))
 		{
-			Loadstone.LogWarning("Runtime dungeon was null, not forcing Async dungeon for this landing");
+			Loadstone.LogInfo("This dungeon flow is blacklisted, not forcing Async Dungeon for this landing");
 			return;
 		}
 
-		__instance.dungeonGenerator.Generator.GenerateAsynchronously = LoadstoneConfig.AsyncDungeon.Value;
-		__instance.dungeonGenerator.Generator.PauseBetweenRooms = 0f;
-		__instance.dungeonGenerator.Generator.MaxAsyncFrameMilliseconds = LoadstoneConfig.DungeonAsyncMaxTime.Value;
+		__instance.GenerateAsynchronously = LoadstoneConfig.AsyncDungeon.Value;
+		__instance.PauseBetweenRooms = 0f;
+		__instance.MaxAsyncFrameMilliseconds = LoadstoneConfig.DungeonAsyncMaxTime.Value;
 	}
 }

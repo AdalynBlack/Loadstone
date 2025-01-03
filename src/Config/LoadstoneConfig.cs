@@ -12,6 +12,7 @@ public static class LoadstoneConfig
 
 	public static ConfigEntry<bool> AsyncDungeon;
 	public static ConfigEntry<float> DungeonAsyncMaxTime;
+	public static ConfigEntry<string> AsyncDungeonBlacklist;
 
 	public static ConfigEntry<bool> AsyncNavmesh;
 
@@ -35,6 +36,7 @@ public static class LoadstoneConfig
 	public static ConfigEntry<float> LoadingMusicVolume;
 
 	public static ConfigEntry<int> LastConfigVersion;
+
 
 	public enum SeedDisplayType
 	{
@@ -61,6 +63,12 @@ public static class LoadstoneConfig
 				new ConfigDescription(
 					"How long to spend generating the dungeon each frame, in milliseconds. There is no vanilla value",
 					acceptableValues: new AcceptableValueRange<float>(1, 1000)));
+
+		AsyncDungeonBlacklist = LoadstoneFile.Bind<string>(
+				"AsyncDungeon",
+				"Async Dungeon Blacklist",
+				"",
+				"A comma-separated list of interiors which should not be processed asynchrounously");
 
 		// Async Navmesh
 		AsyncNavmesh = LoadstoneFile.Bind<bool>(
