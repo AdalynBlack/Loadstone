@@ -1,3 +1,7 @@
+## v0.1.21
+- Added a blacklist to the AsyncDungeon module
+    - If a particular interior is having issues, you can add its DungeonFlow to this list!
+
 ## v0.1.20
 - Removed LoadstoneLoading.ogg
     - This was a leftover from the LCSoundTool integration
