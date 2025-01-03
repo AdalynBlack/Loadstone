@@ -42,7 +42,6 @@ public class AsyncDungeonPatches
 	[HarmonyPrefix]
 	static void GenerateNewFloorPatch(DungeonGenerator __instance)
 	{
-		Loadstone.LogDebug(__instance.DungeonFlow.name);
 		if (LoadstoneConfig.AsyncDungeonBlacklist.Value.Split(",").ToList().Contains(__instance.DungeonFlow.name))
 		{
 			Loadstone.LogInfo("This dungeon flow is blacklisted, not forcing Async Dungeon for this landing");
