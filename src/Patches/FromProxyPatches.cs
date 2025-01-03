@@ -13,6 +13,7 @@ namespace Loadstone.Patches;
 
 public class FromProxyPatches {
 	public static bool ConversionComplete = false;
+	public static bool PostProcessComplete = false;
 
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyPrefix]
@@ -163,11 +164,63 @@ public class FromProxyPatches {
 
 		var newInstructions = new CodeMatcher(instructions)
 			// This represents a `yield return null` statement in the function immediately following FromProxy
-			// We will be replacing this with `yield return WaitUntil(PostProcessCheck)` instead
+			// We will be replacing this with `yield return WaitUntil(ConversionCheck)` instead
 			.MatchForward(false,
 					new CodeMatch(OpCodes.Ldnull),
 					new CodeMatch(OpCodes.Stfld))
 			.SetOpcodeAndAdvance(OpCodes.Nop) // Remove the ldnull while maintaining labels
+			.InsertAndAdvance(
+					new CodeInstruction(OpCodes.Ldloc_2),
+					new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "ConversionCheck")),
+					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(Func<System.Boolean>), parameters: findFuncParams)),
+					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
+			.End()
+			// This puts `WaitUntil(ConversionCheck)` on the top of the stack, as opposed to `null`, making PostProcess wait for FromProxyEnumerator to finish
+			.InstructionEnumeration();
+		
+		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
+		return newInstructions;
+	}
+
+	static bool ConversionCheck()
+	{
+		return FromProxyPatches.ConversionComplete;
+	}
+
+	// Sets a sentinel variable at the start of DungeonGenerator::PostProcess
+	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
+	[HarmonyPrefix]
+	static void PostProcessSentinelStart()
+	{
+		PostProcessComplete = false;
+	}
+
+	// Sets a sentinel variable at the end of DungeonGenerator::PostProcess
+	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
+	[HarmonyPostfix]
+	static void PostProcessSentinelFinish()
+	{
+		PostProcessComplete = true;
+	}
+
+	[HarmonyPatch(typeof(DungeonGenerator), "InnerGenerate", MethodType.Enumerator)]
+	[HarmonyTranspiler]
+	[HarmonyDebug]
+	static IEnumerable<CodeInstruction> InnerGeneratePatch(IEnumerable<CodeInstruction> instructions)
+	{
+		Loadstone.LogDebug($"Attempting to inject async check into DungeonGenerator::InnerGenerate");
+		Type[] findWaitParams = { typeof(Func<bool>) };
+		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
+
+		var newInstructions = new CodeMatcher(instructions)
+			.MatchForward(true,
+					new CodeMatch(OpCodes.Leave),
+					new CodeMatch(OpCodes.Ldarg_0),
+					new CodeMatch(OpCodes.Ldc_I4_M1),
+					new CodeMatch(OpCodes.Stfld),
+					new CodeMatch(OpCodes.Ldarg_0),
+					new CodeMatch(OpCodes.Ldnull)) // IL_041D as of writing this. The "null" in the very last "yield return null"
+			.SetOpcodeAndAdvance(OpCodes.Nop) // Remove ldnull while maintaining labels
 			.InsertAndAdvance(
 					new CodeInstruction(OpCodes.Ldloc_2),
 					new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "PostProcessCheck")),
@@ -175,13 +228,13 @@ public class FromProxyPatches {
 					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
 			// This puts `WaitUntil(PostProcessCheck)` on the top of the stack, as opposed to `null`, making PostProcess wait for FromProxyEnumerator to finish
 			.InstructionEnumeration();
-		
-		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
+
+		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::InnerGenerate");
 		return newInstructions;
 	}
 
 	static bool PostProcessCheck()
 	{
-		return FromProxyPatches.ConversionComplete;
+		return FromProxyPatches.PostProcessComplete;
 	}
 }
