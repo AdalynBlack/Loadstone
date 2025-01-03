@@ -1,3 +1,10 @@
+## v0.1.20
+- Removed LoadstoneLoading.ogg
+    - This was a leftover from the LCSoundTool integration
+    - The mod should now have a much lower file size!
+- Added additional checks to ensure compatibility with more mods
+    - The dungeon will now be marked as complete *after* post processing, rather than before
+
 ## v0.1.19
 - Renamed Nightly to Unstable Beta
     - This should help clear up a common point of confusion
