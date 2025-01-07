@@ -1,12 +1,9 @@
 using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Logging;
-using HarmonyLib;
 using Loadstone.Config;
 using Loadstone.Patches;
 using Loadstone.Patches.ExpansionCore;
-using System;
-using System.Collections;
 
 namespace Loadstone;
 

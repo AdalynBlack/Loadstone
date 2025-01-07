@@ -1,4 +1,3 @@
-using BepInEx.Logging;
 using HarmonyLib;
 using HarmonyLib.Public.Patching;
 using System;

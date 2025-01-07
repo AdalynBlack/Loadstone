@@ -1,13 +1,10 @@
 #if NIGHTLY
 using DunGen;
 using HarmonyLib;
-using Loadstone.Config;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace Loadstone.Patches;

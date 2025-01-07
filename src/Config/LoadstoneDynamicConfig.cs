@@ -1,8 +1,6 @@
-using BepInEx.Configuration;
 using LethalConfig;
 using LethalConfig.ConfigItems;
 using LethalConfig.ConfigItems.Options;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Loadstone.Config;
