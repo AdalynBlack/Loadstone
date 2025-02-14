@@ -12,13 +12,13 @@ namespace Loadstone.Patches;
 
 public class FromProxyPatches {
 	public static bool ConversionComplete = false;
-	public static bool PostProcessComplete = false;
 
 	[HarmonyPatch(typeof(Dungeon), "FromProxy")]
 	[HarmonyPrefix]
 	static bool FromProxyPre(Dungeon __instance, DungeonProxy proxyDungeon, DungeonGenerator generator)
 	{
 		// Reset the completion variable
+		Loadstone.LogInfo("Setting ConversionComplete false");
 		ConversionComplete = false;
 		__instance.StartCoroutine(FromProxyEnumerator(generator, proxyDungeon, __instance));
 		return false;
@@ -42,6 +42,7 @@ public class FromProxyPatches {
 
 		FromProxyEnd(__instance, proxyDungeon, generator, dictionary);
 
+		Loadstone.LogInfo("Setting ConversionComplete true");
 		// Mark the FromProxy process as complete to allow the program to progress
 		ConversionComplete = true;
 	}
@@ -155,27 +156,73 @@ public class FromProxyPatches {
 	// Injects a check to wait for FromProxy to finish executing before running PostProcess
 	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
 	[HarmonyTranspiler]
-	static IEnumerable<CodeInstruction> PostProcessPatch(IEnumerable<CodeInstruction> instructions)
+	static IEnumerable<CodeInstruction> PostProcessPatch(IEnumerable<CodeInstruction> instructions, ILGenerator ilGenerator)
 	{
 		Loadstone.LogDebug($"Attempting to inject async check into DungeonGenerator::PostProcess");
-		Type[] findWaitParams = { typeof(Func<bool>) };
+		Type[] findWaitParams = { typeof(Func<System.Boolean>) };
 		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
 
-		var newInstructions = new CodeMatcher(instructions)
-			// This represents a `yield return null` statement in the function immediately following FromProxy
-			// We will be replacing this with `yield return WaitUntil(ConversionCheck)` instead
+		var matcher = new CodeMatcher(instructions, ilGenerator)
 			.MatchForward(false,
-					new CodeMatch(OpCodes.Ldnull),
-					new CodeMatch(OpCodes.Stfld))
-			.SetOpcodeAndAdvance(OpCodes.Nop) // Remove the ldnull while maintaining labels
+				new CodeMatch(OpCodes.Switch));
+
+		// Extract the switch list
+		List<Label> switchList = (matcher.InstructionAt(0).operand as Label[]).ToList();
+		var jumpIndex = switchList.Count;
+
+		// Extract the leave label
+		matcher.Advance(3);
+		var leaveObject = matcher.InstructionAt(0).operand;
+	
+		if (leaveObject == null) {
+			Loadstone.LogFatal($"Leave instruction did not have an operand! Cannot inject a wait for FromProxy! The dungeon *will* be corrupt");
+			throw new ArgumentNullException("leaveObject is null. Cannot inject functioning code");
+		}
+
+		var leaveLabel = (Label)leaveObject;
+
+		var currentField = (FieldInfo)matcher.MatchForward(true,
+				new CodeMatch(OpCodes.Ldarg_0),
+				new CodeMatch(OpCodes.Ldnull),
+				new CodeMatch(OpCodes.Stfld))
+			.InstructionAt(0).operand;
+
+		var stateField = (FieldInfo)matcher.InstructionAt(3).operand;
+
+		matcher.Start()
+			.MatchForward(false,
+				new CodeMatch(OpCodes.Switch))
+			.Advance(7)
 			.InsertAndAdvance(
-					new CodeInstruction(OpCodes.Ldloc_2),
-					new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "ConversionCheck")),
-					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(Func<System.Boolean>), parameters: findFuncParams)),
-					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
-			.End()
-			// This puts `WaitUntil(ConversionCheck)` on the top of the stack, as opposed to `null`, making PostProcess wait for FromProxyEnumerator to finish
-			.InstructionEnumeration();
+				// <>2__current = WaitUntil(FromProxyPatches.ConversionCheck());
+				new CodeInstruction(OpCodes.Ldarg_0),
+				new CodeInstruction(OpCodes.Ldloc_2),
+				//new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(FromProxyPatches))),
+				new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "ConversionCheck")),
+				new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(Func<System.Boolean>), parameters: findFuncParams)),
+				new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)),
+				new CodeInstruction(OpCodes.Stfld, currentField),
+				// <>1__state = jumpIndex;
+				new CodeInstruction(OpCodes.Ldarg_0),
+				new CodeInstruction(OpCodes.Ldc_I4_S, jumpIndex),
+				new CodeInstruction(OpCodes.Stfld, stateField),
+				// return true;
+				new CodeInstruction(OpCodes.Ldc_I4_1),
+				new CodeInstruction(OpCodes.Stloc_0),
+				new CodeInstruction(OpCodes.Leave, leaveLabel)
+			).CreateLabel(out var conversionCheckLabel);
+
+		// Tell the IEnumerator where to jump to for this new yield return statement
+		switchList.Add(conversionCheckLabel);
+
+		// Write the jump table back
+		matcher
+			.Start()
+			.MatchForward(false,
+				new CodeMatch(OpCodes.Switch))
+			.SetOperandAndAdvance(switchList.ToArray());
+		
+		var newInstructions = matcher.InstructionEnumeration();
 		
 		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::PostProcess");
 		return newInstructions;
@@ -183,57 +230,7 @@ public class FromProxyPatches {
 
 	static bool ConversionCheck()
 	{
+		Loadstone.LogInfo($"ConversionComplete checked, returning {FromProxyPatches.ConversionComplete}");
 		return FromProxyPatches.ConversionComplete;
-	}
-
-	// Sets a sentinel variable at the start of DungeonGenerator::PostProcess
-	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
-	[HarmonyPrefix]
-	static void PostProcessSentinelStart()
-	{
-		PostProcessComplete = false;
-	}
-
-	// Sets a sentinel variable at the end of DungeonGenerator::PostProcess
-	[HarmonyPatch(typeof(DungeonGenerator), "PostProcess", MethodType.Enumerator)]
-	[HarmonyPostfix]
-	static void PostProcessSentinelFinish()
-	{
-		PostProcessComplete = true;
-	}
-
-	[HarmonyPatch(typeof(DungeonGenerator), "InnerGenerate", MethodType.Enumerator)]
-	[HarmonyTranspiler]
-	[HarmonyDebug]
-	static IEnumerable<CodeInstruction> InnerGeneratePatch(IEnumerable<CodeInstruction> instructions)
-	{
-		Loadstone.LogDebug($"Attempting to inject async check into DungeonGenerator::InnerGenerate");
-		Type[] findWaitParams = { typeof(Func<bool>) };
-		Type[] findFuncParams = { typeof(System.Object), typeof(IntPtr) };
-
-		var newInstructions = new CodeMatcher(instructions)
-			.MatchForward(true,
-					new CodeMatch(OpCodes.Leave),
-					new CodeMatch(OpCodes.Ldarg_0),
-					new CodeMatch(OpCodes.Ldc_I4_M1),
-					new CodeMatch(OpCodes.Stfld),
-					new CodeMatch(OpCodes.Ldarg_0),
-					new CodeMatch(OpCodes.Ldnull)) // IL_041D as of writing this. The "null" in the very last "yield return null"
-			.SetOpcodeAndAdvance(OpCodes.Nop) // Remove ldnull while maintaining labels
-			.InsertAndAdvance(
-					new CodeInstruction(OpCodes.Ldloc_2),
-					new CodeInstruction(OpCodes.Ldftn, AccessTools.Method(typeof(FromProxyPatches), "PostProcessCheck")),
-					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(Func<System.Boolean>), parameters: findFuncParams)),
-					new CodeInstruction(OpCodes.Newobj, AccessTools.Constructor(typeof(UnityEngine.WaitUntil), parameters: findWaitParams)))
-			// This puts `WaitUntil(PostProcessCheck)` on the top of the stack, as opposed to `null`, making PostProcess wait for FromProxyEnumerator to finish
-			.InstructionEnumeration();
-
-		Loadstone.LogDebug($"Validating injected async check into DungeonGenerator::InnerGenerate");
-		return newInstructions;
-	}
-
-	static bool PostProcessCheck()
-	{
-		return FromProxyPatches.PostProcessComplete;
 	}
 }

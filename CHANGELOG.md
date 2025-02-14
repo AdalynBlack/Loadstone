@@ -1,3 +1,9 @@
+## v0.1.22
+- Overhauled a portion of the Dungeon Realization module
+    - The game will now begin waiting for the dungeon to spawn sooner
+    - This should hopefully help reduce potential desyncs
+    - The code is now more resilient, and less likely to break should DunGen be updated
+
 ## v0.1.21
 - Added a blacklist to the AsyncDungeon module
     - If a particular interior is having issues, you can add its DungeonFlow to this list!

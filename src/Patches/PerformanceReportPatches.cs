@@ -76,6 +76,7 @@ public class PerformanceReportPatches
 	// Inserts functions for tracking when the dungeon wait starts and ends
 	[HarmonyPatch(typeof(RoundManager), "LoadNewLevelWait", MethodType.Enumerator)]
 	[HarmonyTranspiler]
+	[HarmonyDebug]
 	static IEnumerable<CodeInstruction> DungeonWaitDetection(IEnumerable<CodeInstruction> instructions)
 	{
 		Loadstone.LogDebug("Attempting to patch Dungeon Wait Detection into RoundManager::LoadNewLevelWait");
