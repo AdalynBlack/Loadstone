@@ -1,4 +1,5 @@
 using DunGen;
+using DunGen.Tags;
 using DunGen.Graph;
 using HarmonyLib;
 using System;
@@ -20,30 +21,30 @@ public class DungenOptimizationPatches
 		}
 
 		try {
-			__result = DungeonTagMatchTemp[tileA][tileB];
+			__result = DungeonTagMatchTemp[tileA.Tags][tileB.Tags];
 		} catch (KeyNotFoundException) {
-			Loadstone.LogWarning($"The tile pair of \"{tileA.name}\" and \"{tileB.name}\" was not found in the tag cache! This pair is now being cached, which will cause a small performance penalty");
+			Loadstone.LogWarning($"Tag pair for \"{tileA.name}\" and \"{tileB.name}\" was not found in the tag cache! This pair is now being cached, which will cause a small performance penalty");
 
 			if (!TagMatchDictionary.ContainsKey(__instance))
 			{
-				TagMatchDictionary[__instance] = new Dictionary<Tile, Dictionary<Tile, bool>>();
+				TagMatchDictionary[__instance] = new Dictionary<TagContainer, Dictionary<TagContainer, bool>>();
 				DungeonTagMatchTemp = TagMatchDictionary[__instance];
 			}
-			if (!DungeonTagMatchTemp.ContainsKey(tileA))
-				DungeonTagMatchTemp[tileA] = new Dictionary<Tile, bool>();
-			if (!DungeonTagMatchTemp.ContainsKey(tileB))
-				DungeonTagMatchTemp[tileB] = new Dictionary<Tile, bool>();
+			if (!DungeonTagMatchTemp.ContainsKey(tileA.Tags))
+				DungeonTagMatchTemp[tileA.Tags] = new Dictionary<TagContainer, bool>();
+			if (!DungeonTagMatchTemp.ContainsKey(tileB.Tags))
+				DungeonTagMatchTemp[tileB.Tags] = new Dictionary<TagContainer, bool>();
 
 			__result = HasMatchingTagPairOriginal(__instance, tileA, tileB);
-			DungeonTagMatchTemp[tileA][tileB] = __result;
-			DungeonTagMatchTemp[tileB][tileA] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
+			DungeonTagMatchTemp[tileA.Tags][tileB.Tags] = __result;
+			DungeonTagMatchTemp[tileB.Tags][tileA.Tags] = HasMatchingTagPairOriginal(__instance, tileB, tileA);
 		}
 
 		return false;
 	}
 
-	internal static Dictionary<Tile, Dictionary<Tile, bool>> DungeonTagMatchTemp = null;
-	internal static Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>> TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<Tile, Dictionary<Tile, bool>>>();
+	internal static Dictionary<TagContainer, Dictionary<TagContainer, bool>> DungeonTagMatchTemp = null;
+	internal static Dictionary<DungeonFlow, Dictionary<TagContainer, Dictionary<TagContainer, bool>>> TagMatchDictionary = new Dictionary<DungeonFlow, Dictionary<TagContainer, Dictionary<TagContainer, bool>>>();
 
 	// Extracts the original code for HasMatchingTagPair so we don't use the overridden code
 	[HarmonyPatch(typeof(DungeonFlow), "HasMatchingTagPair")]
@@ -66,18 +67,18 @@ public class DungenOptimizationPatches
 		}
 	}
 
-	static Dictionary<Tile, Dictionary<Tile, bool>> TileConnectionTagOptimization(HashSet<Tile> tiles, DungeonFlow flow)
+	static Dictionary<TagContainer, Dictionary<TagContainer, bool>> TileConnectionTagOptimization(HashSet<Tile> tiles, DungeonFlow flow)
 	{
-		var flowTagMatchDict = new Dictionary<Tile, Dictionary<Tile, bool>>();
+		var flowTagMatchDict = new Dictionary<TagContainer, Dictionary<TagContainer, bool>>();
 
 		foreach (var tileA in tiles)
 		{
-			var tileADict = new Dictionary<Tile, bool>();
+			var tagsADict = new Dictionary<TagContainer, bool>();
 			foreach (var tileB in tiles)
 			{
-				tileADict.Add(tileB, HasMatchingTagPairOriginal(flow, tileA, tileB));
+				tagsADict.Add(tileB.Tags, HasMatchingTagPairOriginal(flow, tileA, tileB));
 			}
-			flowTagMatchDict.Add(tileA, tileADict);
+			flowTagMatchDict.Add(tileA.Tags, tagsADict);
 		}
 
 		return flowTagMatchDict;
@@ -90,10 +91,10 @@ public class DungenOptimizationPatches
 				if (!TagMatchDictionary.ContainsKey(flow))
 					return false;
 
-				if (!TagMatchDictionary[flow].Values.Any(tile => tile == null))
+				if (!TagMatchDictionary[flow].Values.Any(tag => tag == null))
 					return true;
 
-				Loadstone.LogWarning($"At least one tile in {flow.name} has been deleted since the flow was last cached! The cache will be fully recalculated as a result");
+				Loadstone.LogWarning($"At least one tag container in {flow.name} has been deleted since the flow was last cached! The cache will be fully recalculated as a result");
 				return false;
 			}};
 
@@ -123,7 +124,7 @@ public class DungenOptimizationPatches
 	[HarmonyPriority(Priority.VeryLow)]
 	[HarmonyPatch(typeof(DungeonGenerator), "Generate")]
 	[HarmonyPrefix]
-	static void TileTagPrecalcPatch(DungeonGenerator __instance)
+	static void TagPrecalcPatch(DungeonGenerator __instance)
 	{
 		var flow = __instance.DungeonFlow;
 		
