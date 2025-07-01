@@ -1,3 +1,7 @@
+## v0.1.23
+- Rewrote the DunGenOptimizations module to be more consistent and hopefully reduce desync
+    - The dictionary is now tag based rather than tile based to try and prevent issues with MonoBehaviour hashing
+
 ## v0.1.22
 - Overhauled a portion of the Dungeon Realization module
     - The game will now begin waiting for the dungeon to spawn sooner
