@@ -132,8 +132,9 @@ public class FromProxyPatches {
 
 			// These instructions exist to get around a bug within MonoMod
 			// The original function has a GameObject variable. This carries over to this function as well
-			// However, if no code pulls from UnityEngine, MonoMod mistakenly removes the function's dependency on UnityEngine
-			// This is how I decided to inject a UnityEngine dependency to fix the issue
+			// If no reference to UnityEngine exists within the function, the UnityEngine AssemblyNameReference will not have a hash
+			// This causes an error later when MonoMod tries to use the hash for that GameObject, and errors because there is no hash to use
+			// Relevant MonoMod PR: https://github.com/MonoMod/MonoMod/pull/202
 					new CodeInstruction(OpCodes.Ldtoken, typeof(UnityEngine.GameObject)),
 					new CodeInstruction(OpCodes.Pop));
 
