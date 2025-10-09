@@ -108,12 +108,16 @@ public class NavmeshPatches
 
 	static IEnumerator NavMeshUpdateCheck(AsyncOperation asyncOperation, NavMeshSurface navMeshSurface)
 	{
-		while (!asyncOperation.isDone)
+		Loadstone.LogDebug("Starting NavMeshUpdateCheck");
+		while (!asyncOperation.isDone) {
+			Loadstone.LogDebug("Waiting for UpdateNavMeshDataAsync to finish...");
 			yield return null;
+		}
 
+		Loadstone.LogDebug("UpdateNavMeshDataAsync finished, refreshing surface data");
 		navMeshSurface.RemoveData();
+		Loadstone.LogDebug("Removed existing surface data");
 		navMeshSurface.AddData();
-
 		Loadstone.LogDebug("Updated navmesh");
 	}
 }
