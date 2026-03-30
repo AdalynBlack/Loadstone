@@ -1,3 +1,6 @@
+## v0.1.24
+- Added a deprecation notice to the README
+
 ## v0.1.23
 - Rewrote the DunGenOptimizations module to be more consistent and hopefully reduce desync
     - The dictionary is now tag based rather than tile based to try and prevent issues with MonoBehaviour hashing
