@@ -1,3 +1,6 @@
+# Deprecation Notice
+Loadstone will no longer be getting any updates. Starting with the release of v80, every feature provided by Loadstone is now included in the base game, including some extra features like Object Pooling that were never implemented in Loadstone. Please only use this mod for versions prior to v80
+
 # Loadstone
 Reduces the stuttering experienced while loading levels, and will reduce or entirely remove the amount of time that the voicechat is unable to function for.
 
